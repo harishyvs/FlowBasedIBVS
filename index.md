@@ -12,9 +12,9 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 <style>
 .tablelines table,
 .tablelines td{
+        height : 10px;
         border: 1px solid black;
         width : 20px;
-        height : 20px;
         } ,
 .tablelines th {
         border: 1px solid black;
