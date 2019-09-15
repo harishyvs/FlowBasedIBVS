@@ -9,6 +9,18 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 ![Pipeline](https://i.imgur.com/8VOqFsb.png)
 ### Predictions and Results
 Images table
+|  Initial Image | Desired Image  | PhotoVS  | Saxena et al[4]  | Sensor Depth  | Depth Net  | Flow Depth  |
+|:-:|---|---|---|---|---|---|
+| ![Pipeline](https://i.imgur.com/8VOqFsb.png)  | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  |  ![Pipeline](https://i.imgur.com/8VOqFsb.png) | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  |
+|  ![Pipeline](https://i.imgur.com/8VOqFsb.png) |   ![Pipeline](https://i.imgur.com/8VOqFsb.png)|  ![Pipeline](https://i.imgur.com/8VOqFsb.png) | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  |
+|  ![Pipeline](https://i.imgur.com/8VOqFsb.png) | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  |  ![Pipeline](https://i.imgur.com/8VOqFsb.png) |  ![Pipeline](https://i.imgur.com/8VOqFsb.png) |  ![Pipeline](https://i.imgur.com/8VOqFsb.png) | ![Pipeline](https://i.imgur.com/8VOqFsb.png)  |  ![Pipeline](https://i.imgur.com/8VOqFsb.png) |
+|   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |
+|   |   |   |   |   |   |   |
 Error table
 ### Video Explanation
 
