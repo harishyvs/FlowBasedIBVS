@@ -8,6 +8,7 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 
 ![Pipeline](https://i.imgur.com/8VOqFsb.png)
 ### Predictions and Results
+<script src="https://gist.github.com/andyferra/2554919.js"></script>
 <style>
 .tablelines table, .tablelines td, .tablelines th {
         border: 1px solid black;
