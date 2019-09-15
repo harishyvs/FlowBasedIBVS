@@ -6,9 +6,7 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 
 ### Pipeline of the Proposed approach
 
-![CellGIF](https://i.imgur.com/5w37uXz.gif)  
-![Pipeline](https://imgur.com/8VOqFsb)
-![img](https://i.imgur.com/8VOqFsb.png)
+![Pipeline](https://i.imgur.com/8VOqFsb.png)
 ### Predictions and Results
 Images table
 Error table
