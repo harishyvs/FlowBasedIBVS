@@ -11,18 +11,18 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 
 <style>
 .tablelines table{
-        max-width :"500";
-        max-height:"350";
+        max-width :"100";
+        max-height:"100";
         },
 .tablelines td{
         max-height : 10px;
         border: 1px solid black;
-        max-width : 20px;
+        max-width : 10px;
         } ,
 .tablelines th {
         border: 1px solid black;
-        max-width : 20px;
-        max-height : 20px;
+        max-width : 10px;
+        max-height : 10px;
         }
 </style>
 |Initial Image|Desired Image|PhotoVS| Saxena et al[4]  | Sensor Depth  | Depth Network  | Flow Depth  |
