@@ -10,7 +10,10 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 ### Predictions and Results
 
 <style>
-.tablelines table,
+.tablelines table{
+        max-width :"500";
+        max-height:"350";
+        },
 .tablelines td{
         max-height : 10px;
         border: 1px solid black;
