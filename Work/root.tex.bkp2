@@ -1,0 +1,719 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{subfigure}
+\usepackage{mathptmx}
+\usepackage{bm}
+\usepackage{amsmath,amssymb} % define this before the 
+\usepackage{color}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{enumerate}
+\usepackage{epstopdf}
+\usepackage{array}  
+\usepackage{eqparbox}
+\usepackage{multirow}
+\epstopdfsetup{update}
+\usepackage{url}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\graphicspath{ {./figures} }
+\title{\LARGE \bf
+Deep Flow Guided Image Based Visual Servoing 
+}
+
+
+\author{Albert Author$^{1}$ and Bernard D. Researcher$^{2}$% <-this % stops a space
+\thanks{*This work was not supported by any organization}% <-this % stops a space
+\thanks{$^{1}$Albert Author is with Faculty of Electrical Engineering, Mathematics and Computer Science,
+        University of Twente, 7500 AE Enschede, The Netherlands
+        {\tt\small albert.author@papercept.net}}%
+\thanks{$^{2}$Bernard D. Researcheris with the Department of Electrical Engineering, Wright State University,
+        Dayton, OH 45435, USA
+        {\tt\small b.d.researcher@ieee.org}}%
+}
+
+
+\begin{document}
+
+
+\newpage
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+Classical visual servoing approaches rely on extracting correspondences between current and desired pose also they require a knowledge of the depth of the scene. In contrast recent deep learning based visual servoing approaches aim to estimate the camera pose between a pair of images circumventing the requirement for scene's depth and camera parameters. However, estimation of camera pose on a large variety of scenes is a non-trivial problem for deep networks thus requiring a lot of data  and sometimes fine-tuning for adapting to a novel scene. In this paper, we propose a deep image based visual servoing approach that decouples the problem of depth estimation of the scene and dense correspondences estimation and systematically combines them for estimation the velocity. We show the generalizability of our approach on 10 previously unseen photo-realistic simulation environments for 6 degrees of freedom task with as well as on 2 real scenarios using a quadrotor with large camera transformations. We experimentally showcase the that servoing obtains better and more stable results by employing depth based cues and using flow features which are easy to observe.
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{INTRODUCTION}
+Visual servoing address the problem of attaining a desired pose with respect to a given environment. Classical visual servoing approaches compute sparse correspondences between the desired and current pose of the camera \cite{vsbasic}. The control problem is then solved my iterative minimizing the error between current and desired pose. Pose based visual servoing (PBVS) aims to estimate the camera pose directly in Cartesian space from the given image, the controller then guides the robotic system in the direction that minimizes the this error directly in 3D space. Whereas, image based visual servoing (IBVS) approaches control the robot by minimizing the feature error implicitly. It has been observed that the pose based visual serviong approaches control the robot to reach the desired pose without getting stuck in a local minima, however these approaches are sensitive to camera calibration errors and pose estimation errors especially in depth \cite{vsprob}. Which is the advantage of image based visual servoing approaches. Recent trends suggest for any generic scene classical local descriptor based approaches lead to incorrect correspondences and therefore not optimal for visual servoing. Direct visual servoing \cite{vsprob} approaches also have been successful for precise matching however they suffer from smaller convergence basin. One of the rigid requirements of classical visual servoing approaches is knowledge of the depth of the environment, which is difficult to obtain using a monocular camera. 
+
+\indent Visual servoing based on deep networks was introduced by Saxena et al. \cite{servonet}, their approach was closer to PBVS, where given a pair of images, the network estimated relative pose between them. The relative pose was then minimsed using a traditional PBVS controller. They trained their network on publicly available Microsoft 7 scenes dataset \cite{7scene} for estimating pose. Athogh trained on limited number of scenes, their network was able to generalize well on novel environments. \cite{trainingdeepvs} presented another network designed inspired from Siamese \cite{siamese} architecture and presented extensive guidelines for training deep networks on for the task of visual servoing. They used Labelme dataset \cite{labelme} for collecting a diverse set of images that served as different background they further used homography for obtaining viewpoint variations. The network was then trained to estimate the relative pose given a pair of images taken from these viewpoints. This ensured that network generalized to different images.  Similarly, Yu et al. also present a Siamese style deep network for visual servoing \cite{siamesevs}, their network obtains a much higher sub-millimeter accuracy for pose estimation as compared to \cite{servonet,trainingdeepvs}. However, the network was trained only on a table-top scene with similar objects and 
+
+\indent To circumvent the requirement of training data, recent Deep reinforcement learning based visual \cite{sim2real,sim2real2}, \cite{deepq,sefsupervised} use simulation based data. However, several of these approaches are specific to manipulation tasks and are trained only for scene with objects lying on a table. Furthermore, these approaches do not consider full 6 degrees of freedom (DOF) visual servoing. \cite{deeprlvsdrone} showcase their approach on aerial robots, however they only report result for a single scene with a colored target. \cite{targetdriven} present the results most similar to us on wide range range of environments. However, they still only consider motion in a plane and their approach is specific to similar environments, thus generalization to novel environments is non-trivial. \cite{http://www.roboticsproceedings.org/rss15/p55.pdf}
+
+\indent In this paper, we present a visual servoing approach based on deep learning for attaining a 6 DOF pose which generalises to novel environments. In contrast to existing approaches that directly attempt to estimate the relative pose between current and desired pose, we observe the dense corresponds using a flow network and combine them with the depth estimation cues provided by another network in a principled way using interaction matrix similar to classical visual servoing. This design relies of visual features and depth cues which are easier to observe and uses geometry to fuse them thus providing a large convergence basin and more generalization to novel environments.              
+
+\begin{figure*}[ht!]
+    \begin{center}
+    \includegraphics[width=17cm, height=7cm] {figures/DepthNet_pipeline.jpg}
+    \caption{Pipeline of the system. We employ flow features from Flownet-2 network }
+    \label{fig:pipeline}
+    \end{center}
+\end{figure*}
+
+
+\indent Our contributions are summarized as follows:
+\begin{itemize}
+    \item In contrast to previous deep visual servoing approaches that directly regress relative camera pose between current and desired camera pose, we predict dense correspondences using optical flow which are easier to observe. 
+    
+    \item Furthermore, we pivot our observations  on depth predictions which results in a stable visual servoing performance especially for 3D scenes and larger camera transformations.
+    
+    \item With the deep networks, it is non-trivial to estimate the convergence domain of the scene, we therefore propose a photo realistic bench-marking tasks. This provides a way to compare the performance of different visual servoing approaches and a variety of scene agnostic tasks based on metric relevant on the context of visual servoing such as photometric error, camera poses error, trajectory length, smoothness of control commands and convergence basin, which are otherwise difficult to compute.
+    
+\end{itemize}
+
+
+\section{Approach}
+In this work, we seek a generalized approach of for out-of-the-box visual servoing performance in indoor environments. Existing deep visual servoing approaches are closer to PBVS approaches as they aim to directly estimate the relative camera pose camera pose between the current and the desired pose, which requires a huge amount a data. Bateux et al. \cite{trainingdeepvs} use a train their network by viewing a planar scene from multiple viewpoints in a simulation environment. Whereas, by selecting the textures from a variety of background generalization could be achieved over different environments but due the incorrect depth of the scene it is non-trivial to attain large camera transformations. Saxena et al. \cite{servonet} on the other hand train their data by sampling image pairs from a given trajectory. However, they require ground truth for training their network thus they only train their data on 7 scenes. \cite{siamesevs} train their networks for a manipulation task and limit the dataset to table-top setting. To circumvent these strict training requirements, we base our approach on image based visual servoing. We employ a flow network \cite{flownet2} to estimate the dense correspondences between current view and desired view. These visual features are easier to observe to estimate the relative camera transform between them. Furthermore, to capture the geometry of the scene, we pivot our approach on depth cues similar to classical image based visual servoing. However, unlike classical IBVS, where a coarse depth was assumed, we are able to to estimate the depth by using a deep network. In this work, we present two designs for obtaining the depth, in the first approach we explicitly use a depth network \cite{depthnet} while our second design employs a scaled version of flow as a proxy for the depth. Our pipeline can be visualized from figure \ref{fig:pipeline}.
+%In contrast to directly estimating the relative camera pose, for large camera transformations, it is easier to estimate the optical flow. Furthermore, it has been previously 
+%\subsection{Network Architecture}
+
+\subsection{Dense correspondences}
+Classical IBVS approaches assume use local appearance based features such as SURF \cite{surf}, SIFT \cite{sift} to describe the scene, feature error is computed by subtracting their location in current and desired image. In this work we represent the feature error by computing flow between current and desired image. With the recent success of neural features over hand-crafted features for classification and segmentation tasks. We explore the neural flow approaches for estimating the visual feature error. Specifically, we employ \cite{flownet2} features for this task, which is state-of-the-art in flow computation. Thus, we represent the feature error $s-s*$ as $F(I,I^*)$.
+
+
+\subsection{Depth estimation}
+Among the existing scene agnostic deep visual servoing approaches, \cite{siamesevs} was trained on planar scenes, while \cite{photometricvs} estimate the relative translation and rotation individually and thus require a scaling factor to merge between them. Therefore, these approaches do considering underlying geometry of the scene of the underlying scene, which reduces the convergence basin. 
+
+\indent It has been seen for the classical visual servoing approaches that depth plays and important role in convergence of the approaches[??]. However, classical approaches either approximate through a coarse depth of the scene[??], or estimate the depth using odometry of the robots, which again limit the convergence basin especially for 3D scenarios with large camera transforms. In this paper, we present two designs to accommodate depth cues for stable visual servoing. 
+
+\begin{figure}%
+\centering
+\subfigure[][]{%
+\label{fig:ex4-a}%
+\includegraphics[height=1in]{comparison/real.png}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex4-b}%
+\includegraphics[height=1in]{comparison/true_depth.png}} \\
+\subfigure[][]{%
+\label{fig:ex4-c}%
+\includegraphics[height=1in]{comparison/depth_net.png}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex4-d}%
+\includegraphics[height=1in]{comparison/flow_depth.jpg}}%
+\caption[Comparison of depth from various pipelines]{Comparison of depth from various pipelines:
+\subref{fig:ex4-a}  Given image,
+\subref{fig:ex4-b} True depth from the depth sensor,
+\subref{fig:ex4-c} single view from Depth Network and
+\subref{fig:ex4-d} two-view depth visualization from flow network.
+}%
+\label{fig:depth_comparision}%
+\end{figure}
+
+
+\subsubsection{Single view depth estimation}
+Our first design is based on directly estimating scene's depth from single image. We employ a convolutional neural network based on U-net ar 
+
+\subsubsection{Two view depth estimation}
+It can be seen that 
+
+%\begin{figure*}[ht!]
+%    \begin{center}
+%    \includegraphics[width=17cm, height=7cm] {figures/FlowDepth_pipeline.jpg}
+%    \caption{Depth from FLow prediction: }
+%    \label{fig:Flow as depth Pipeline}
+%    \end{center}
+%\end{figure*}
+
+\subsection{Image based visual servoing}
+Classical visual servoing approaches consider sparse correspondences between the current and desired configuration and minimize them iterative by gradient descent over feature error in image space using pseudo-inverse of image Jacobian. On the other hand, we use a deep network \cite{flownet2} for estimating the dense correspondences as optical flow. Due to large dimensionality of the feature vector we employ levenberg-marquardt based gradient descent similar to  collewet et al. \cite{vssetfree}, specifically our control law is given as: 
+\begin{equation}
+v_c = - \lambda (L^TL+\mu diag(L^TL))^{-1} F(I,I^*).    
+\end{equation}
+Where, the visual feature error is given by dense correspondences observed by the flow network. $L(z)$ is the interaction matrix as described in \cite{vsbasic} and the depth $z$ is estimated by either the depth network $D(I)$ or the scaled flow $\alpha F(I(t),I(t-1))$. The tunable parameters $\lambda$ and $\mu$ decide the step size and direction of descend respectively.
+
+\section{EXPERIMENTS}
+The motivation is of the current work is to achieve a visual servoing which could be generalized over different scenerions for attaining a 6 DOF pose with goal. Several of the visual servoing approaches \cite{ all RL based approaches} only focus on goal reaching task for manipulation and do not consider the pose in which object is reached. \cite{trainingdeepvs} consider a goal reaching in 6 DOF, however most of the scenes are considered as planar and table-top. Only \cite{photometricvs} provide results for 6 DOF goal reaching task and large camera transformations, however they do not show results in a photo-realistic environment. The central focus in the experiments is to validate the generalizebility of approaches. Therefore, we present bench-marking tasks for simulation environment without fine-tuning the network. To showcase that our approach can be used out-of-the box for various environments, we further present results with a an werial robot on two real scenarios.   
+
+\begin{figure}
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Sportswood.png} 
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Beach.png} 
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Cooperstown.png} 
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Eastville_bathroom.png} 
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Reyno.png} 
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Kerrtown.png} 
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Bolton.png} 
+    \includegraphics[width=2cm, height=1.6cm]{Dataset_images/Eastville_avg.png} 
+    \caption{Photo-realistic environments considered for benchmarking tasks.}
+    \label{fig:benchmark}
+\end{figure}
+
+
+\subsection{Simulation results on Benchmark}
+
+Aur scenes complexity of final pe aur homogenity of scene pe
+Like env differenctial hai kihai
+Like for eg last but one mein pura white white hai
+Tho.. aur desired bhi last 3 cases mein hard hai
+Like amt of translation aur rotatio
+
+With the success of recent deep learning approaches in visual servoing domain, ... however the resetults are presented for different   
+
+\subsection{Contoller perfromance}
+For analysing the controller performance, we next present the results for a visual servoing trial. The inail pose and desired pose are given by figure {??} and figure {??}. From figure [??] it can be seen that .....
+
+
+\subsection{Convergence study}
+Classic visual servoing approaches especially dense visual servoing can attain the goal with sub-milliliter accuracy. However, their convergence basin is limited. One of the major advantages that neural visual servoing   approaches exhibit is in terms of their convergence domain. In this experiment we compare our approach with existing approaches for studying the convergence domain. We select a scene in habitat environment and evaluate how many times our approach was able to converge. To have a fair comparison we follow a similar methodology as suggested by \cite{trainingdeepvs}. It can be seen from the figure [] that our approaches outperforms the existing approaches even in the converge criterion. To complete the study of how good the convergence we further report the convergence domain in terms of camera pose as well as overlap for three scenes for the benchmark.
+
+%\subsection{Ablation study}
+\subsection{Real drone experiment}
+We finally validate the generalization of our approach on real data using a aerial robot on two different scenarios one outdoor and one indoor. We again test our approach for a large camera transformation as the initial and desired images are given by figure \ref{??} and figure \ref{??} respectively. It can be seen qualitatively that the robot is able to attain the desired pose even though large camera transformation and different illumination conditions.
+
+
+
+\begin{table*}[h!]
+\begin{center}
+\begin{tabular}{|c| c |c | c | c | c | }
+\hline
+ InitialImage & DesiredImage & Error ICRA17 & Error Truedepth & Error Depthnet & Error Flowdepth  \\ \hline
+\hline \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/ROANE/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ROANE/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/ROANE/ferror.png}
+
+ \\ \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/BALLOU/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/BALLOU/ferror.png} &
+    \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/BALLOU/ferror.png}
+
+ \\ \hline
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/ARKANSAW/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ARKANSAW/ferror.png} &
+    \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/ARKANSAW/ferror.png}
+ \\ \hline
+
+\hline \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/PABLO/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/ferror.png} &
+ \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/PABLO/ferror.png} &
+ \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/PABLO/ferror.png} 
+ \\ \hline
+ 
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/STOKES/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/ferror.png} &
+ \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/STOKES/ferror.png}  &
+ \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/STOKES/ferror.png}  \\ \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/MESIC/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/MESIC/ferror.png} &
+   \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/MESIC/ferror.png}
+ \\ \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/EUDORA/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/EUDORA/ferror.png} &
+   \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/EUDORA/ferror.png}
+ \\ \hline
+\hline \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/QUANTICO/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/QUANTICO/ferror.png} &
+    \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/QUANTICO/ferror.png}
+
+ \\ \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/HILLSDALE/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/ferror.png} & 
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/HILLSDALE/ferror.png} &
+    \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/HILLSDALE/ferror.png} 
+
+ \\ \hline
+\includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/init.png} &   
+            \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/des.png} & 
+           \includegraphics[width=0.15\textwidth, height=20mm]{ICRA17/DENMARK/ferror.png} & 
+ \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/ferror.png} &
+  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/DENMARK/ferror.png} &
+   \includegraphics[width=0.15\textwidth, height=20mm]{FlowDepth/DENMARK/ferror.png}
+ \\ \hline
+      \end{tabular}
+\caption{Experiments and Results}
+ \label{tbl:TrueDepth}
+ \end{center}
+ \end{table*}
+
+
+% \begin{table*}[h!]
+% \begin{center}
+% \begin{tabular}{|c| c |c | c | c | }
+% \hline
+%  InitialImage & DesiredImage & ResultantImage & InputError & OutputError \\ \hline
+% \hline \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ROANE/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/BALLOU/ferror.png} 
+%  \\ \hline
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/ARKANSAW/ferror.png} 
+%  \\ \hline
+
+% \hline \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/PABLO/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/STOKES/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/MESIC/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/EUDORA/ferror.png} 
+%  \\ \hline
+% \hline \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/QUANTICO/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/HILLSDALE/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{TrueDepth/DENMARK/ferror.png} 
+%  \\ \hline
+%       \end{tabular}
+% \caption{Experiments and Results using TrueDepth}
+%  \label{tbl:TrueDepth}
+%  \end{center}
+%  \end{table*}
+ 
+%  \begin{table*}[h!]
+% \begin{center}
+% \begin{tabular}{|c| c |c | c | c | }
+% \hline
+%  InitialImage & DesiredImage & ResultantImage & InputError & OutputError \\ \hline
+% \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/EUDORA/init.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/EUDORA/des.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/EUDORA/res.png} &
+%           \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/EUDORA/ierror.png} &
+%  \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/EUDORA/ferror.png}
+%  \\ \hline
+% \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/PABLO/init.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/PABLO/des.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/PABLO/res.png} &
+%           \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/PABLO/ierror.png} &
+%  \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/PABLO/ferror.png}
+%  \\ \hline
+% \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/MESIC/init.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/MESIC/des.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/MESIC/res.png} &
+%           \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/MESIC/ierror.png} &
+%  \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/MESIC/ferror.png}
+%  \\ \hline
+% \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/DENMARK/init.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/DENMARK/des.png} &
+%             \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/DENMARK/res.png} &
+%           \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/DENMARK/ierror.png} &
+%  \includegraphics[width=0.18\textwidth, height=30mm]{FlowDepth/DENMARK/ferror.png}
+%  \\ \hline
+%       \end{tabular}
+% \caption{Experiments and Results using FlowDepth}
+%  \label{tbl:FlowDepth}
+%  \end{center}
+%  \end{table*}
+%  \begin{table*}[h!]
+% \begin{center}
+% \begin{tabular}{|c| c |c | c | c | }
+% \hline
+%  InitialPose & DesiredPose & ResultantPose & InputError & OutputError \\ \hline
+% [0.  1.5 0. ]  &  [-0.23  1.45 -0.92]  &  [-0.23  1.46 -0.9 ]  &  [-0.23 -0.05 -0.92]  &  [-0.    0.01  0.01]  \\
+% ( 0. -0.  0.)  &  [-8.56 -4.29  0.27]  &  [-6.77 -4.01 -0.06]  &  [-8.56 -4.29  0.27]  &  [ 1.78  0.28 -0.2 ]  \\ \hline
+% [0.  1.5 0. ]  &  [ 1.27  2.18 -0.32]  &  [ 1.3   2.17 -0.32]  &  [ 1.27  0.68 -0.32]  &  [ 0.03 -0.01  0.01]  \\
+% ( 0. -0.  0.)  &  [  -8.58   -7.67 -171.67]  &  [-7.84  8.81 -7.86]  &  [  -8.58   -7.67 -171.67]  &  [  1.71 -16.41 163.56]  \\ \hline
+% [0.  1.5 0. ]  &  [-0.71  1.57 -0.11]  &  [-0.71  1.55 -0.11]  &  [-0.71  0.07 -0.11]  &  [ 0.   -0.02  0.  ]  \\
+% ( 0. -0.  0.)  &  [-2.28  3.77 -7.97]  &  [-2.76  4.22 -8.05]  &  [-2.28  3.77 -7.97]  &  [-0.41  0.51 -0.05]  \\ \hline
+% [0.  1.5 0. ]  &  [-0.79  1.33  1.84]  &  [-0.78  1.35  1.84]  &  [-0.79 -0.17  1.84]  &  [0.01 0.02 0.  ]  \\
+% ( 0. -0.  0.)  &  [-18.86 -19.02  -7.37]  &  [-19.24 -18.76  -7.46]  &  [-18.86 -19.02  -7.37]  &  [-0.32  0.31 -0.22]  \\ \hline
+%       \end{tabular}
+% \caption{Experiments and Results using FlowDepth}
+%  \label{tbl:FlowDepth}
+%  \end{center}
+%  \end{table*}
+% ~                                                                                                                                                                                                                                                                                         
+% ~       
+
+
+
+ 
+% \section{DEPTH NETWORK}
+% \begin{table*}[h!]
+% \begin{center}
+% \begin{tabular}{|c| c |c | c | c | }
+% \hline
+%  InitialImage & DesiredImage & ResultantImage & InputError & OutputError \\ \hline
+% \hline \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ROANE/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ROANE/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ROANE/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ROANE/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ROANE/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/BALLOU/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/BALLOU/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/BALLOU/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/BALLOU/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/BALLOU/ferror.png} 
+%  \\ \hline
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ARKANSAW/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ARKANSAW/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ARKANSAW/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ARKANSAW/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/ARKANSAW/ferror.png} 
+%  \\ \hline
+
+% \hline \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/PABLO/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/PABLO/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/PABLO/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/PABLO/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/PABLO/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/STOKES/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/STOKES/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/STOKES/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/STOKES/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/STOKES/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/MESIC/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/MESIC/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/MESIC/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/MESIC/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/MESIC/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/EUDORA/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/EUDORA/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/EUDORA/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/EUDORA/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/EUDORA/ferror.png} 
+%  \\ \hline
+% \hline \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/QUANTICO/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/QUANTICO/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/QUANTICO/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/QUANTICO/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/QUANTICO/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/HILLSDALE/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/HILLSDALE/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/HILLSDALE/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/HILLSDALE/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/HILLSDALE/ferror.png} 
+%  \\ \hline
+% \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/DENMARK/init.png} &   
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/DENMARK/des.png} & 
+%             \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/DENMARK/res.png} & 
+%           \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/DENMARK/ierror.png} & 
+%  \includegraphics[width=0.15\textwidth, height=20mm]{DepthNetwork/DENMARK/ferror.png} 
+%  \\ \hline
+%       \end{tabular}
+% \caption{Experiments and Results using DepthNetwork}
+%  \label{tbl:DepthNetwork}
+% \end{center}
+% \end{table*}
+
+% \begin{table*}[h!]
+% \begin{center}
+% \begin{tabular}{|c| c |c | c | c | }
+% \hline
+%  InputError & ICRA17 & TrueDepth & DepthNetwork & FlowDepth \\ \hline
+% \hline \hline
+% [-0.77 -0.31 -1.15]  &  [-0.04    0.07  0.09  ]  &  [-0.    0.02  0.  ]  &  [ 0.01 -0.02 -0.  ]  &  [-0.   -0.04 -0.  ]   \\
+% ' [-13.97 -9.14  7.26]  &  [-0.89 -0.02 -0.09]  &  [-0.37 -0.   -0.03]  &  [ 0.37  0.07 -0.01]  & [ 0.71 -0.03  0.09]  \\ \hline
+% [ 0.85 -0.77 -1.37]  &  [0.   0.04 0.02]  &  [0.   0.04 0.01]  &  [0.   0.02 0.01]  & [0.01 0.02 0.02]  \\
+% ' [-13.96  6.68 -5.22]  &  [-0.83  0.06  0.09]  &  [-0.83  0.06  0.09]  &  [-0.41  0.06  0.06]  &   [ 0.05 -0.03 -0.06] \\ \hline
+% [ 0.82 -0.54 -1.31]  &  [ 0.0 -0.05 -0.]  &  [ 0.01 -0.03 -0.  ]  &  [ 0.02 -0.02  0.  ]  &  [0.   0.03 0.01] \\
+% ' [-17.75   6.29  24.58]  &  [0.96 0.66 0.77]  &  [ 0.81  0.17 -0.21]  &  [ 0.53  0.48 -0.42]  &  [-0.89 -0.02  0.18] \\ \hline
+% \hline  \hline
+% [ 1.57  0.98 -0.62]  &  [ 0.09 -0.08  0.19]  &  [ 0.01 -0.01  0.01]  &  [ 0.01 -0.01  0.]  &  [ 0.03 -0.01  0.01]  \\
+% ' [-13.33  12.67 -13.58]  &  [ 0.66  0.87 -0.99]  &  [ 0.51  0.13 -0.06]  &  [ 0.5  0.13 -0.05]  &  [0.64 1.06 0.65]  \\ \hline
+% [-0.77  0.31 -1.14]  & [ 0.09  0.02  -0.01]  & [ 0.03 -0.03 -0.0]  &    [-0.01 -0.01 -0.01]  &  [ 0.02 -0.04 -0.  ]  \\
+% ' [-14.3   9.53  5.61]  & [-1.01   5.31 -3.51]  &  [ 1.05 -8.66  0.15]  &    [ 0.31 -8.84  0.64]  &  [ 0.93 -8.33  0.44]  \\ \hline
+% [-1.01  0.37 -0.41]  &  [-0.5  -0.05  0.67]  &  [-0.    0.02 -0.  ]  &  [-0.    0.02 -0.  ]  &  [ 0.   -0.02  0.  ]  \\
+% ' [-7.28  8.77 -12.97]  &  [ 1.93 -3.17  9.87]  &  [-1.33  0.42  0.04]  &  [-1.32  0.4   0.04]  &  [-0.41  0.51 -0.05]  \\ \hline
+% [-0.53 -0.35 -1.22]  &  [0.21 0.03 1.24]  &  [ 0.   -0.03  0.  ]  &  [ 0.    0.02 -0.  ]  &  [-0.    0.01  0.01]  \\
+% ' [-13.56 -9.29  5.27]  &  [8.51 4.31 0.47]  &  [ 1.78  0.28 -0.2 ]  &  [-0.75  0.15 -0.09]  &  [ 1.78  0.28 -0.2 ]  \\ \hline
+% \hline \hline
+% [-2.01 -0.89 -1.28]  &  [ 2.05 -0.49  0.99]  &  [ 0.03  0.01 -0.0]  &  [-0.    0.01  0.  ]  &   [-0.   -0.02 -0.  ] \\
+% ' [-14.42  12.64 -5.76]  & [-30.06  36.12 -13.04]  & [ 0.1 0.08 -0.06]  &    [-0.3  -0.04  0.16]  &   [ 0.48 -0.07 -0.26]  \\ \hline
+% [-1.02  0.52  1.57]  &  [ 1.98 -0.06 -1.11]  &  [ 0.01 -0.04  0.01]  &  [ 0.   -0.04  0.01]  &  [-0.01 -0.04  0.  ]  \\
+% ' [-24.5  -17.69  -9.85]  &  [23.91 14.06 10.59]  &  [0.78 0.04 0.03]  &  [0.75 0.02 0.03]  &   [ 0.9  -0.07  0.1 ]  \\ \hline
+% [-1.09 -0.37  2.14]  &  [ 0.34  0.04 -1.32]  &  [-0.01 -0.   -0.01]  &  [-0.  0.  0.]  &  [0.01 0.02 0.  ]  \\
+% ' [-23.86 -24.02  -12.37]  &  [20.86 15.6  13.29]  &  [ 0.   -0.22  0.18]  &  [-0.11 -0.05  0.1 ]  &  [-0.32  0.31 -0.22]  \\ \hline
+%       \end{tabular}
+% \caption{Comparitive Table of Rotational and Translational errors in poses , ** flow depth results yet to be added}
+%  \label{tbl:Poses}
+%  \end{center}
+%  \end{table*}
+ 
+ \begin{table*}[h!]
+\begin{center}
+\begin{tabular}{|c| c |c | c | c |c | }
+\hline
+ InputError & Photometric VS & ICRA17 & TrueDepth & DepthNetwork & FlowDepth \\ \hline
+\hline \hline
+1.4182735984287376 & 0.05 & 0.05 & 0.02 & 0.022360679774997897 & 0.04 \\
+18.204617546106263 & 0.05 & 0.8947625383307014 & 0.3712142238654117 & 0.3766961640367472 & 0.7163099887618488 \\  \hline
+1.7867008703193716 & 0.05 & 0.044721359549995794 & 0.04123105625617661 & 0.022360679774997897 & 0.03 \\
+16.332556444108803 & 0.05 & 0.8370185183136631 & 0.8370185183136631 & 0.41868842830916636 & 0.05830951894845301 \\  \hline
+1.6371010964506745 & 0.05 & 0.12083045973594572 & 0.03162277660168379 & 0.0282842712474619 & 0.03 \\
+30.96454424014666 & 0.05 & 1.39645980966156 & 0.8538735269347564 & 0.8292767933567176 & 0.8958236433584459 \\  \hline
+\hline  \hline
+1.9518452807535744 & 0.05 & 0.15033296378372907 & 0.017320508075688773 & 0.017320508075688773 & 0.033166247903554 \\
+22.861194194529734 & 0.05 & 1.4739742195845897 & 0.5297169055259611 & 0.5297169055259611 & 1.3984634424967999 \\  \hline
+1.4101772938180503 & 0.05 & 1.1920570456148483 & 0.041048751503547587 & 0.017320508075688773 & 0.044721359549995794 \\
+18.077140260561126 & 0.05 & 6.444866173940309 & 8.724712029631695 & 8.8685568160778 & 8.39329494298872 \\  \hline
+1.1511298797268708 & 0.05 & 0.8374962686484042 & 0.02 & 0.02 & 0.02 \\
+17.26650514724969 & 0.05 & 10.544700090566824 & 1.395313584826006 & 1.3798550648528272 & 0.6562773803811921 \\  \hline
+1.375427206361718 & 0.05 & 1.2580143083447024 & 0.03 & 0.02 & 0.01414213562373095 \\
+17.26124560974671 & 0.05 & 9.550764367316367 & 1.8129533915685754 & 0.7701298591796061 & 1.8129533915685754 \\  \hline
+\hline \hline
+2.5437374078312405 & 0.05 & 2.3286691478181267 & 0.0341828826337123 & 0.01 & 0.02 \\
+20.022077814252945 & 0.05 & 48.76781315581005 & 11.674557807471768 & 0.3423448553724738 & 0.5503635162326805 \\  \hline
+1.9431160541768986 & 0.05 & 2.270704736419951 & 0.042426406871192854 & 0.04123105625617661 & 0.04123105625617661 \\
+31.783778881687436 & 0.05 & 29.69039912160158 & 0.7816009211867653 & 0.7508661665037252 & 0.9082400563727632 \\  \hline
+2.4299382708208865 & 0.05 & 1.3636715146984628 & 0.01414213562373095 & 0.0 & 0.022360679774997897 \\
+36.04548376704077 & 0.05 & 29.242498183294806 & 0.2842534080710379 & 0.15684387141358122 & 0.4968903299521938 \\  \hline
+      \end{tabular}
+\caption{Comparitive Table of Rotational and Translational errors in poses , ** flow depth results yet to be added}
+ \label{tbl:Poses}
+ \end{center}
+ \end{table*}
+
+
+\section{Conclusion}
+In this work, we have put forward a baseline comparison between all the present state of the art visual servoing techniques and have quantified the effect of each method. We have compared our Image-based visual servoing technique with the existing frameworks for visual servoing tasks using CNN. We have used FlowNet 2.0 to estimate the optical flow between 2 images and have used this as visual features in order to estimate the camera velocity and perform servoing accordingly. A major break through in the attainment of the desired pose can be found using the integration of the FlowNet 2.0 with a depth network which performs on par with the state of the art depth networks. This method is reliable on a large variety of scenes as the depth network is trained both on indoor and outdoor scenes, therefore our pipeline with IBVS can be deployed in any environmental setting.
+
+
+\begin{table*}[h!]
+\begin{center}
+\begin{tabular}{|c| c |c | c | c | }
+\hline
+ Metric & ICRA17 & TrueDepth & DepthNetwork & FlowDepth \\ \hline
+\hline \hline
+ Trajectory Length&  0  &  2.24  &  1.42  &  1.19  \\ \hline
+ No of iterations & 0  &  764  &  233  &  1560  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+ Trajectory Length&  0  &  1.58  &  1.55  &  2.31  \\ \hline
+ No of iterations & 0  &  150  &  143  &  871  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+ Trajectory Length&  0  &  2.36  &  3.65  &  2.37 \\ \hline
+ No of iterations & 0  &  84  &  89  &  869  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+\hline \hline
+ Trajectory Length&  0  &  2.74  &  2.82  &  1.85  \\ \hline
+ No of iterations & 0  &  62  &  244  &  981  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+ Trajectory Length&  0  &  2.31  &  1.19  &  1.1 \\ \hline
+ No of iterations & 0  &  214  &  185  &  580  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+ Trajectory Length&  0  &  1.52  &  2.56  &  0.89  \\ \hline
+ No of iterations & 0  &  104  &  186  &  3831  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+ Trajectory Length&  0  &  1.33  &  2.49  &  1.26  \\ \hline
+ No of iterations & 0  &  20  &  283  &  661  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+\hline \hline
+ Trajectory Length&  0  &  2.03  &  5.88  &  2.26  \\ \hline
+ No of iterations & 0  &  504  &  237  &  754  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+ Trajectory Length&  0  &  2.24  &  2.28  &  2.32  \\ \hline
+ No of iterations & 0  &  183  &  145  & 1124  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+ Trajectory Length&  0  &  2.52  &  2.67  &  3.52  \\ \hline
+ No of iterations & 0  &  314  &  114  &  1386  \\ \hline
+ Time per iteration&  0  &  0  &  0  &  0  \\ \hline \hline
+      \end{tabular}
+      
+\caption{Comparitive Table of the metrics in data}
+ \label{tbl:DATA}
+ \end{center}
+ \end{table*}
+ 
+ \begin{figure}%
+\centering
+\subfigure[][]{%
+\label{fig:ex3-a}%
+\includegraphics[height=1in]{FD_QUANTICO_Tvel.eps}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex3-b}%
+\includegraphics[height=1in]{FD_QUANTICO_Rvel.eps}} \\
+\subfigure[][]{%
+\label{fig:ex3-c}%
+\includegraphics[height=1in]{FD_QUANTICO_photo.eps}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex3-d}%
+\includegraphics[height=1in]{FD_QUANTICO_traj.eps}}%
+\caption[3D positioning task]{3D positioning task:
+\subref{fig:ex3-a}  Translational velocity in m/s.;
+\subref{fig:ex3-b}Rotational
+velocity in rad/s.;
+\subref{fig:ex3-c} Photometric feature error.; and,
+\subref{fig:ex3-d} Camera trajectory.; Flow depth : Our
+approach is able to attain the desired pose even when the displacement
+between initial and desired pose is large and lightning is non-homogeneous}%
+
+\label{fig:ex3}%
+\end{figure}
+ \begin{figure}%
+\centering
+\subfigure[][]{%
+\label{fig:ex3-a}%
+\includegraphics[height=1in]{DN_QUANTICO_Tvel.eps}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex3-b}%
+\includegraphics[height=1in]{DN_QUANTICO_Rvel.eps}} \\
+\subfigure[][]{%
+\label{fig:ex3-c}%
+\includegraphics[height=1in]{DN_QUANTICO_photo.eps}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex3-d}%
+\includegraphics[height=1in]{DN_QUANTICO_traj.eps}}%
+\caption[3D positioning task]{3D positioning task:
+\subref{fig:ex3-a}  Translational velocity in m/s.;
+\subref{fig:ex3-b}Rotational
+velocity in rad/s.;
+\subref{fig:ex3-c} Photometric feature error.; and,
+\subref{fig:ex3-d} Camera trajectory.; Depth Network Our
+approach is able to attain the desired pose even when the displacement
+between initial and desired pose is large and lightning is non-homogeneous}%
+\label{fig:ex3}%
+\end{figure}
+
+\newpage
+
+\section{Drone}
+\begin{figure}%
+\centering
+\subfigure[][]{%
+\label{fig:ex3-a}%
+\includegraphics[height=1in]{drone/intitial.png}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex3-b}%
+\includegraphics[height=1in]{drone/desired_image.png}} \\
+\subfigure[][]{%
+\label{fig:ex3-c}%
+\includegraphics[height=1in]{drone/attained_image.png}}%
+\hspace{8pt}%
+\subfigure[][]{%
+\label{fig:ex3-d}%
+\includegraphics[height=1in]{drone/drone_initial.png}}%
+
+\subfigure[][]{%
+\label{fig:ex3-e}%
+\includegraphics[height=1in]{drone/drone_final.png}}%
+
+\caption[3D positioning task]{3D positioning task:
+\subref{fig:ex3-a} Initial image as seen by the drone;
+\subref{fig:ex3-b}Desired final image;
+\subref{fig:ex3-c} Attained image ;
+\subref{fig:ex3-d} Initial drone position as seen by us%
+\subref{fig:ex3-e} Final drone position as seen by us}
+\label{fig:ex3}%
+\end{figure}
+
+% \includegraphics[width=0.25\textwidth, height=25mm]{drone/intitial.png} \\ 
+% \includegraphics[width=0.25\textwidth, height=25mm]{drone/drone_initial.png} \\  
+% \includegraphics[width=0.25\textwidth, height=25mm]{drone/drone_final.png} \\
+% \includegraphics[width=0.25\textwidth, height=25mm]{drone/desired_image.png} \\
+% \includegraphics[width=0.25\textwidth, height=25mm]{drone/attained_image.png}  \\
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEE}
+\end{document}
