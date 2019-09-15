@@ -1,37 +1,60 @@
-## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/harishyvs/FlowBasedIBVS/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+Skip to content
+Pull requests
+Issues
+Marketplace
+Explore
+@harishyvs
+Learn Git and GitHub without any code!
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
 
-### Markdown
+1
+0
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+    1
 
-```markdown
-Syntax highlighted code block
+ayushgaud/Stacked_HG_CoordConvGRU
+Code
+Issues 0
+Pull requests 0
+Projects 0
+Security
+Insights
+Stacked_HG_CoordConvGRU/index.md
+@ayushgaud ayushgaud Update index.md 90818d7 on Mar 23
+23 lines (14 sloc) 2.26 KB
+Object Parsing in Sequences Using CoordConv Gated Recurrent Networks
+Abstract
 
-# Header 1
-## Header 2
-### Header 3
+We present a monocular object parsing framework for consistent keypoint localization by capturing temporal correlation on sequential data. In this paper, we propose a novel recurrent network based architecture to model long-range dependencies between intermediate features which are highly useful in tasks like keypoint localization and tracking. We leverage the expressiveness of the popular stacked hourglass architecture and augment it by adopting memory units between intermediate layers of the network with weights shared across stages for video frames. We observe that this weight sharing scheme not only enables us to frame hourglass architecture as a recurrent network but also prove to be highly effective in producing increasingly refined estimates for sequential tasks. Furthermore, we propose a new memory cell, we call CoordConvGRU which learns to selectively preserve spatio-temporal correlation and showcase our results on the keypoint localization task. The experiments show that our approach is able to model the motion dynamics between the frames and significantly outperforms the baseline hourglass network. Even though our network is trained on a synthetically rendered dataset, we observe that with minimal fine tuning on 300 real images we are able to achieve better performance than various state-of-the-art methods trained with the same level of supervisory inputs. The proposed network also uses a simpler architecture which enables it to run in real time on a standard GPU which is desirable for such applications. Finally, we make our architectures and 524 annotated sequences of cars from KITII dataset publicly available.
+Inner workings of a CoordConvGRU Cell
 
-- Bulleted
-- List
+CellGIF
+Predictions from the Network
 
-1. Numbered
-2. List
+synthGIF KITTIGIF
+Video Explanation
 
-**Bold** and _Italic_ and `Code` text
+Video
+Network Code
 
-[Link](url) and ![Image](src)
-```
+https://github.com/ayushgaud/hourglass_CoordConvGRU
+Annotated KITTI Images
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Link to Dataset
 
-### Jekyll Themes
+    © 2019 GitHub, Inc.
+    Terms
+    Privacy
+    Security
+    Status
+    Help
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/harishyvs/FlowBasedIBVS/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
