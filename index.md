@@ -8,13 +8,12 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 
 ![Pipeline](https://i.imgur.com/8VOqFsb.png)
 ### Predictions and Results
-<script src="https://gist.github.com/andyferra/2554919.js"></script>
 <style>
 .tablelines table, .tablelines td, .tablelines th {
         border: 1px solid black;
         }
 </style>
-|Initial Image| Desired Image|PhotoVS| Saxena et al[4]  | Sensor Depth  | Depth Net  | Flow Depth  |
+|Initial Image|Desired Image|PhotoVS| Saxena et al[4]  | Sensor Depth  | Depth Network  | Flow Depth  |
 |:-:|---|---|---|---|---|---|
 |  <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/ROANE/init.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/ROANE/des.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/PhotoVS/ROANE/ferror.png "> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA17/ROANE/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/ROANE/ferror.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/DepthNetwork/ROANE/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/FlowDepth/ROANE/ferror.png"> |
 | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/BALLOU/init.png"> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/BALLOU/des.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/PhotoVS/BALLOU/ferror.png "> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA17/BALLOU/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/BALLOU/ferror.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/DepthNetwork/BALLOU/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/FlowDepth/BALLOU/ferror.png"> |
