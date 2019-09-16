@@ -8,7 +8,24 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 
 ![Pipeline](https://i.imgur.com/8VOqFsb.png)
 ### Predictions and Results
-|Initial Image| Desired Image|PhotoVS| Saxena et al[4]  | Sensor Depth  | Depth Net  | Flow Depth  |
+
+<style>
+.tablelines table{
+        max-width :"100";
+        max-height:"100";
+        },
+.tablelines td{
+        max-height : 10px;
+        border: 1px solid black;
+        max-width : 10px;
+        } ,
+.tablelines th {
+        border: 1px solid black;
+        max-width : 10px;
+        max-height : 10px;
+        }
+</style>
+|Initial Image|Desired Image|PhotoVS| Saxena et al[4]  | Sensor Depth  | Depth Network  | Flow Depth  |
 |:-:|---|---|---|---|---|---|
 |  <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/ROANE/init.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/ROANE/des.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/PhotoVS/ROANE/ferror.png "> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA17/ROANE/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/ROANE/ferror.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/DepthNetwork/ROANE/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/FlowDepth/ROANE/ferror.png"> |
 | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/BALLOU/init.png"> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/BALLOU/des.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/PhotoVS/BALLOU/ferror.png "> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA17/BALLOU/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/BALLOU/ferror.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/DepthNetwork/BALLOU/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/FlowDepth/BALLOU/ferror.png"> |
@@ -20,4 +37,6 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 |  <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/QUANTICO/init.png"> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/QUANTICO/des.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/PhotoVS/QUANTICO/ferror.png "> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA17/QUANTICO/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/QUANTICO/ferror.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/DepthNetwork/QUANTICO/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/FlowDepth/QUANTICO/ferror.png"> |
 | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/HILLSDALE/init.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/HILLSDALE/des.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/PhotoVS/HILLSDALE/ferror.png "> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA17/HILLSDALE/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/HILLSDALE/ferror.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/DepthNetwork/HILLSDALE/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/FlowDepth/HILLSDALE/ferror.png"> |
 | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/DENMARK/init.png"> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/DENMARK/des.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/PhotoVS/DENMARK/ferror.png "> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA17/DENMARK/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/TrueDepth/DENMARK/ferror.png"> | <img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/DepthNetwork/DENMARK/ferror.png "> |<img align="center" width="100" height="80" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/FlowDepth/DENMARK/ferror.png"> |
+{: .tablelines}
+
 ### Video Explanation
