@@ -11,7 +11,7 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 ![ImagesTable](https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/images_table.png)
         ![ErrorTable alt ><](https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/error_table.png)
 
-<img align="center" src="https://rw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/error_table.png">
+<img align="middle" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/error_table.png">
 
 
 ### Video Explanation
