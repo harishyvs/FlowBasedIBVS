@@ -9,9 +9,8 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 ![Pipeline](https://i.imgur.com/8VOqFsb.png)
 ### Predictions and Results
 ![ImagesTable](https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/images_table.png)
-        ![ErrorTable alt ><](https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/error_table.png)
-
 <img align="center" src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/error_table.png">
 
 
 ### Video Explanation
+![ImagesTable](https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/ICRA_Video.mp4)
