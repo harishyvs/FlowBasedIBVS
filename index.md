@@ -11,4 +11,4 @@ Existing  deep  learning  based  visual  servoing  approaches  regress  the  rel
 
 ### Predictions and Results
 <p align="center">
-<img  src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/images_table.png"><img src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/error_table.png" />  </p> 
+<img  src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/images_table.png"/><img src="https://raw.githubusercontent.com/harishyvs/FlowBasedIBVS/master/Work/error_table.png" />  </p> 
