@@ -18,7 +18,7 @@ This repository contains the code for running FlowBased IBVS and the results obt
 
 Save the input(initial) and output(desired) images in a folder named input_baseline_2.
 
-(The code take test.rgba.00000.png as initial and test.rgba.00019.png as the desired image, and the depth image for the intial image in case of flowdepth-pipeline named test.depth.00000.png).
+(The code take test.rgba.00000.png as initial and test.rgba.00019.png as the desired image, and the depth image for the initial image in case of flowdepth - pipeline named test.depth.00000.png).
 
 Run the below commands in 2 separate terminals in the following order .
 
