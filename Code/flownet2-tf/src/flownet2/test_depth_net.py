@@ -18,7 +18,7 @@ def main():
     #    out_path=FLAGS.out,
     #)
 
-    net.test(checkpoint='flownet-2.ckpt-0', out_path = '/home/yvsharish/test/output_dir')
+    net.test(checkpoint='Flownet2/flownet-2.ckpt-0', out_path = '../output_dir')
 
 
 if __name__ == '__main__':

@@ -95,7 +95,7 @@ class Net(object):
 
         # load the depth model
 
-        f = gfile.FastGFile("tf_model.pb", 'rb')
+        f = gfile.FastGFile("flownet2/FlowNet2/tf_model.pb", 'rb')
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         f.close()
