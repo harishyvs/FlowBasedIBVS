@@ -6,11 +6,11 @@ This repository contains the code for running FlowBased IBVS and the results obt
 
 1. Code : This folder contains the main code for running FlowBased IBVS.
 
-##### examples_baseline_2 folder
-This folder contains the code that runs the habitat simulator and ibvs controller.
+	##### examples_baseline_2 folder
+		This folder contains the code that runs the habitat simulator and ibvs controller.
 
-##### flownet2-tf
-This folder contains the implementation of the Flownet2 in tensorflow. We have made some changes in the net.py files so as to use the flownet's output as part of our pipeline.
+	##### flownet2-tf
+		This folder contains the implementation of the Flownet2 in tensorflow. We have made some changes in the net.py 			files so as to use the flownet's output as part of our pipeline.
 
 2. Data : This folder contains the results for various experiments performed. 
 
@@ -41,9 +41,11 @@ The velocities predicted, photoerror, the images as scene in the simulator are s
 ### Prerequisites
 
 Tensorflow,
-Habitat-sim (for running in the simulator, can also send the velocities predicted in a different simulator)
+Habitat-sim (for running in the simulator, can also send the velocities predicted in a different simulator).
+
 Here is the link to the Habitat-sim repo :
 [https://github.com/facebookresearch/habitat-sim](https://github.com/facebookresearch/habitat-sim)
+The repo also contains the information to download the dataset used (.glb files from gibson dataset).
 
 ### Project Page
 [https://github.com/harishyvs/FlowBasedIBVS](https://github.com/harishyvs/FlowBasedIBVS)
