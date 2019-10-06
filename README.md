@@ -1,26 +1,48 @@
 # FlowBasedIBVS
 ![Pipeline](https://i.imgur.com/8VOqFsb.png)
+## Contents 
+
+This repository contains the code for running FlowBased IBVS and the results obtained.
+
+1. Code : This folder contains the main code for running FlowBased IBVS.
+
+#####examples_baseline_2 folder
+This folder contains the code that runs the habitat simulator and ibvs controller.
+
+#####flownet2-tf
+This folder contains the implementation of the Flownet2 in tensorflow. We have made some changes in the net.py files so as to use the flownet's output as part of our pipeline.
+
+2. Data : This folder contains the results for various experiments performed. 
+
 ## Usage
 
-### Generating TFRecords
+Save the input and output images in a folder input-baseline-2
 
-#### Annotations file format:  
+Run the below commands in 2 separate terminals.
+
 ```
+cd Code/flownet2-tf
+python -m src.flownet2.test_flow_depth (for flow depth)
+		(or)
+python -m src.flownet2.test_depth_net (for depth network)
 ```
-Execute the command below to to generate **train.tfrecords** and **train.tfrecords** files
 
-`python generate_tfrecords.py --data-dir='dataset_folder' --input-file `annotations_file.txt` --seq-length 4`
+```
+cd Code/examples-baseline-2
+python example_me_depth_net.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb 
+		(or)
+python example_me_flow_depth.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb
+```
 
-### Training
+### Results
 
-Use the following command to start the training session:
+The velocities predicted, photoerror, the images as scene in the simulator are stored in output-baseline-2 output folder.
 
-`python hg_main.py --data-dir='tfrecord_dir' --job-dir='checkpoint_dir' --num-gpus=4 --train-batch-size=16 --eval-batch-size=16 --seq-length=4 --train-steps=500000 --variable-strategy GPU`
+### Prerequisites
 
-It will use **train.tfrecords** and **eval.tfrecords** files in the tfrecord_dir path to training and validation respectively
+Tensorflow 
+Habitat-sim (for running in the simulator, can also send the velocities predicted in a different simulator)
 
-### Testing
-`python hg_main.py --data-dir='tfrecord_dir' --job-dir='checkpoint_dir' --mode='test' --eval-steps=1000`
 
 ### Project Page
 [https://github.com/harishyvs/FlowBasedIBVS](https://github.com/harishyvs/FlowBasedIBVS)
