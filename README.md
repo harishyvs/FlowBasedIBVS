@@ -6,10 +6,10 @@ This repository contains the code for running FlowBased IBVS and the results obt
 
 1. Code : This folder contains the main code for running FlowBased IBVS.
 
-#####examples_baseline_2 folder
+##### examples_baseline_2 folder
 This folder contains the code that runs the habitat simulator and ibvs controller.
 
-#####flownet2-tf
+##### flownet2-tf
 This folder contains the implementation of the Flownet2 in tensorflow. We have made some changes in the net.py files so as to use the flownet's output as part of our pipeline.
 
 2. Data : This folder contains the results for various experiments performed. 
