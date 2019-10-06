@@ -14,11 +14,17 @@ This repository contains the code for running FlowBased IBVS and the results obt
 
 2. Data : This folder contains the results for various experiments performed. 
 
+Please download the FlowNet2 folder from the following link and store it in Code/flownet2-tf/src/flownet2/
+
+https://drive.google.com/open?id=13rvb_HCWc673C43YVZurwlxJTdX42UUd
+
+Final path of accessing the downloaded folder should be Code/flownet2-tf/src/flownet2/FlowNet2
+
 ## Usage
 
-Save the input(initial) and output(desired) images in a folder named input_baseline_2.
+Save the input(initial) and output(desired) images in the folder : Code/flownet2-tf/src/image_baseline_2 as initial_image.png and desired_image.png.
 
-(The code take test.rgba.00000.png as initial and test.rgba.00019.png as the desired image, and the depth image for the initial image in case of flowdepth - pipeline named test.depth.00000.png).
+NOTE: For the initial depth image in case of flowdepth, store it as initial_depth.png in the same folder.
 
 Run the below commands in 2 separate terminals in the following order .
 
@@ -40,7 +46,9 @@ python example_me_flow_depth.py --width 512 --height 384 --scene path/to/habitat
 
 ### Results
 
-The velocities predicted, photoerror, the images as scene in the simulator are stored in output-baseline-2 output folder.
+The quantitative results such as photoerror, velocities predicted in every iteration are stored in the folder : Code/flownet2-tf/src/aaaaa
+
+The qualitative results : The images taken in the simulator, depth images and flo images are stored in the folder : Code/flownet2-tf/src/image_baseline_2_output
 
 ### Prerequisites
 
