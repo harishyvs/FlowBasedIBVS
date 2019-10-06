@@ -40,7 +40,7 @@ The velocities predicted, photoerror, the images as scene in the simulator are s
 
 ### Prerequisites
 
-Tensorflow 
+Tensorflow,
 Habitat-sim (for running in the simulator, can also send the velocities predicted in a different simulator)
 
 
