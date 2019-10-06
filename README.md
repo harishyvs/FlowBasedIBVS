@@ -42,7 +42,8 @@ The velocities predicted, photoerror, the images as scene in the simulator are s
 
 Tensorflow,
 Habitat-sim (for running in the simulator, can also send the velocities predicted in a different simulator)
-
+Here is the link to the Habitat-sim repo :
+[https://github.com/facebookresearch/habitat-sim](https://github.com/facebookresearch/habitat-sim)
 
 ### Project Page
 [https://github.com/harishyvs/FlowBasedIBVS](https://github.com/harishyvs/FlowBasedIBVS)
