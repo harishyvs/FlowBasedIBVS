@@ -18,8 +18,9 @@ This repository contains the code for running FlowBased IBVS and the results obt
 
 Save the input and output images in a folder input-baseline-2
 
-Run the below commands in 2 separate terminals.
+Run the below commands in 2 separate terminals in the following order .
 
+[Server Code]
 ```
 cd Code/flownet2-tf
 python -m src.flownet2.test_flow_depth (for flow depth)
@@ -27,6 +28,7 @@ python -m src.flownet2.test_flow_depth (for flow depth)
 python -m src.flownet2.test_depth_net (for depth network)
 ```
 
+[Client Code]
 ```
 cd Code/examples-baseline-2
 python example_me_depth_net.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb 
