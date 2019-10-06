@@ -16,7 +16,8 @@ This repository contains the code for running FlowBased IBVS and the results obt
 
 ## Usage
 
-Save the input and output images in a folder input-baseline-2
+Save the input(initial) and output(desired) images in a folder named input_baseline_2.
+(The code take test.rgba.00000.png as initial and test.rgba.00019.png as the desired image).
 
 Run the below commands in 2 separate terminals in the following order .
 
