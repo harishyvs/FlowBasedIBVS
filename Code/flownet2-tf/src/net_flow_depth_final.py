@@ -122,7 +122,7 @@ class Net(object):
             #s.listen(1)
             #conn, addr = s.accept()
 
-            f=open("/scratch/yvsharish/working/aaaaa/baseline_2_avg_flow.txt","a+")
+            f=open("aaaaa/baseline_2_avg_flow.txt","a+")
             while True:
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 s.bind((HOST, PORT))
@@ -135,8 +135,8 @@ class Net(object):
                     conn.send(data)
 
                     if(str(data)=='0'):
-                        source_path='/home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00000.png'
-                        target_path = '/home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png'
+                        source_path='image_baseline_2/initial_image.png'
+                        target_path = 'image_baseline_2/desired_image.png'
                         source = imread(source_path)
                         target = imread(target_path)
                         source = source[..., [2, 1, 0]]
@@ -156,16 +156,16 @@ class Net(object):
                         if save_image:
                             flow_img,avg_flow = flow_to_image(pred_flow_np)
                             f.write("Average_flow"+str(avg_flow)+"\n")
-                            full_out_path = os.path.join('/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/', unique_name + '.png')
+                            full_out_path = os.path.join('image_baseline_2_output/', unique_name + '.png')
                             imsave(full_out_path, flow_img)
 
                         if save_flo:
                             full_out_path = os.path.join(out_path, actual_name + '.flo')
                             write_flow(pred_flow_np, full_out_path)
                     else:
-                        source_path = '/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba.' + str(data).zfill(5) + '.png'
-                        target_path = '/home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png'
-                        target_path_2 = '/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba.' + str(int(data) - 1).zfill(5) + '.png'
+                        source_path = 'image_baseline_2_output/test.rgba.' + str(data).zfill(5) + '.png'
+                        target_path = 'image_baseline_2/desired_image.png'
+                        target_path_2 = 'image_baseline_2_output/test.rgba.' + str(int(data) - 1).zfill(5) + '.png'
                         # source = []
                         # target = []
                         source_img = imread(source_path)
@@ -201,11 +201,11 @@ class Net(object):
                         save_image=True
                         if save_image:
                             flow_img_for,avg_flow_for = flow_to_image(pred_flow_for)
-                            full_out_path = os.path.join('/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/', unique_name_for + '.png')
+                            full_out_path = os.path.join('image_baseline_2_output/', unique_name_for + '.png')
                             f.write("Average_flow"+str(avg_flow_for)+"\n")
                             imsave(full_out_path, flow_img_for)
                             flow_img_rev,avg_flow = flow_to_image(pred_flow_rev)
-                            full_out_path = os.path.join('/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/', unique_name_rev + '.png')
+                            full_out_path = os.path.join('image_baseline_2_output/', unique_name_rev + '.png')
                             imsave(full_out_path, flow_img_rev)
 
                         if save_flo:

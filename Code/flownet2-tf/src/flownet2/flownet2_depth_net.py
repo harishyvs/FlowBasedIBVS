@@ -1,4 +1,4 @@
-from ..net_flow_depth_final import Net, Mode
+from ..net_depth_network_one import Net, Mode
 from ..flownet_css.flownet_css import FlowNetCSS
 from ..flownet_sd.flownet_sd import FlowNetSD
 from ..flow_warp import flow_warp

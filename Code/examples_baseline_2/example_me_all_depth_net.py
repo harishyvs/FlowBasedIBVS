@@ -6,7 +6,7 @@
 
 
 import argparse
-import demo_runner_me_all_final as dr
+import demo_runner_me_all_depth_net as dr
 # import demo_runner_me_other as dr2
 import numpy as np
 import os

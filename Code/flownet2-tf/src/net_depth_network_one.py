@@ -95,7 +95,7 @@ class Net(object):
 
         # load the depth model
 
-        f = gfile.FastGFile("/home/yvsharish/ICRA_2019/FlowNet2/tf_model.pb", 'rb')
+        f = gfile.FastGFile("tf_model.pb", 'rb')
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         f.close()
@@ -115,17 +115,17 @@ class Net(object):
             s.bind((HOST, PORT))
             s.listen(1)
             conn, addr = s.accept()
-            flowfile=open("/scratch/yvsharish/working/aaaaa/baseline_2_avg_flow.txt","a+")
+            flowfile=open("aaaaa/baseline_2_avg_flow.txt","a+")
             while True:
                 data = conn.recv(4096)
                 if not data: break
                 print()
                 conn.send(data)
                 if(str(data)=='0'):
-                    input_a_path='/home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00000.png'
+                    input_a_path='image_baseline_2/initial_image.png'
                 else:
-                    input_a_path = '/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba.' + str(data).zfill(5) + '.png'
-                input_b_path = '/home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png'
+                    input_a_path = 'image_baseline_2_output/test.rgba.' + str(data).zfill(5) + '.png'
+                input_b_path = 'image_baseline_2/desired_image.png'
                 # source = cv2.imread(input_a_path)
                 # target = cv2.imread(input_b_path)
                 #
@@ -182,7 +182,7 @@ class Net(object):
                 if save_image:
                     flow_img, avg_flow = flow_to_image(pred_flow_np)
                     flowfile.write("Average flow - depth-network"+str(data).zfill(5)+":"+str(avg_flow))
-                    full_out_path = os.path.join('/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/', unique_name + '.png')
+                    full_out_path = os.path.join('image_baseline_2_output/', unique_name + '.png')
                     imsave(full_out_path, flow_img)
 
                 if save_flo:
@@ -193,7 +193,7 @@ class Net(object):
                 #depth_img_loc = '/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth.' + str(data).zfill(5) + '.png'
                 #print(depth_img_loc)
                 shan='test.depth.'
-                full_out_path = os.path.join('/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/',shan+str(data).zfill(5)+ '.png')
+                full_out_path = os.path.join('image_baseline_2_output/',shan+str(data).zfill(5)+ '.png')
                 # depth_img = Image.fromarray(
                 #     (depth_img / 10 * 255).astype(np.uint8), mode="L"
                 # )

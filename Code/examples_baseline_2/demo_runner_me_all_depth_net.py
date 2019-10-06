@@ -147,7 +147,7 @@ class DemoRunner:
     def save_color_observation(self, obs, total_frames):
         color_obs = obs["color_sensor"]
         color_img = Image.fromarray(color_obs, mode="RGBA")
-        color_img.save("/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba.%05d.png" % total_frames)
+        color_img.save("../flownet2-tf/src/image_baseline_2_output/test.rgba.%05d.png" % total_frames)
 
     def save_semantic_observation(self, obs, total_frames):
         semantic_obs = obs["semantic_sensor"]
@@ -162,7 +162,7 @@ class DemoRunner:
             depth_img = Image.fromarray(
                 (depth_obs / 10 * 255).astype(np.uint8), mode="L"
             )
-            depth_img.save("/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth.%05d.png" % total_frames)
+            depth_img.save("../flownet2-tf/src/image_baseline_2_output/test.depth.%05d.png" % total_frames)
 
     def output_semantic_mask_stats(self, obs, total_frames):
         semantic_obs = obs["semantic_sensor"]
@@ -271,7 +271,7 @@ class DemoRunner:
 
         if not self._sim_settings["silent"]:
             print("position\t", state.position, "\t", "rotation\t", state.rotation)
-        f=open("/scratch/yvsharish/working/aaaaa/baseline_2_exp_pose.txt","a+")
+        f=open("../flownet2-tf/src/aaaaa/baseline_2_exp_pose.txt","a+")
         f.write("%0.8f %0.8f %0.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation[0],state.rotation[1],state.rotation[2],state.rotation[3]))
         f.close()
         # f.write("%0.8f %0.8f %0.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation[0],state.rotation[1],state.rotation[2],state.rotation[3]))
@@ -391,7 +391,7 @@ class DemoRunner:
         # error
         time2=time.time()
         timeIBVS=time2-time1
-        ftime=open("/scratch/yvsharish/working/aaaaa/baseline_2_time_iterations.txt","a+")
+        ftime=open("../flownet2-tf/src/aaaaa/baseline_2_time_iterations.txt","a+")
         ftime.write("IBVS%.20f\n"%(timeIBVS))
         ftime.close()
         return vc
@@ -400,11 +400,11 @@ class DemoRunner:
         max_frames=15
         total_frames=0
         # while total_frames < max_frames-1:
-        f=open("/scratch/yvsharish/working/aaaaa/baseline_2_velocities_single_1.txt","a+")
-        file_in=open("/scratch/yvsharish/working/aaaaa/baseline_2_velocities_single_1_new.txt","w")
+        f=open("../flownet2-tf/src/aaaaa/baseline_2_velocities_single_1.txt","a+")
+        file_in=open("../flownet2-tf/src/aaaaa/baseline_2_velocities_single_1_new.txt","w")
 
-        f1=open("/scratch/yvsharish/working/aaaaa/baseline_2_velocities_norm_1.txt","a+")
-        f2=open("/scratch/yvsharish/working/aaaaa/baseline_2.txt","w")
+        f1=open("../flownet2-tf/src/aaaaa/baseline_2_velocities_norm_1.txt","a+")
+        f2=open("../flownet2-tf/src/aaaaa/baseline_2.txt","w")
         print('before getting flo')
         error= self.readFlow('/home/yvsharish/test/output_dir/output_img.flo' )
         print('after reading flo')
@@ -426,7 +426,7 @@ class DemoRunner:
         # print(s)
         # print(sys.argv[1])
         # harish=("/home/harish/RRC/ICRA_2019/habitat/habitat-sim/image/test.depth.%05.png")
-        alph='/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth.' + str(frames).zfill(5) + '.png'
+        alph='../flownet2-tf/src/aaaaa/image_baseline_2_output/test.depth.' + str(frames).zfill(5) + '.png'
         print(alph)
         while(not os.path.isfile(alph)):
         # while(not os.path.isfile( '/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth.00001.png')):
@@ -449,7 +449,7 @@ class DemoRunner:
                     time.sleep(0.001)
 
 
-            harish="/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
+            harish="../flownet2-tf/src/aaaaa/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
             # with open(harish, 'rb') as f:
             #     b = BytesIO()
             #     f.seek(15, 0)
@@ -468,7 +468,7 @@ class DemoRunner:
                     time.sleep(0.001)
 
             print('shankar is great')
-            harish="/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
+            harish="../flownet2-tf/src/aaaaa/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
             print(alph)
         # harish="/home/harish/RRC/ICRA_2019/habitat-sim/image_baseline_2/test.depth.00000"+".png"
         # harish="/home/harish/RRC/ICRA_2019/habitat-sim/image_baseline_2/test.depth.00019"+".png"
@@ -550,10 +550,10 @@ class DemoRunner:
             # os.system(command)
             print('After IBVS')
 
-            f_1=open("/scratch/yvsharish/working/aaaaa/baseline_2_exp.txt","a+")
-            f_1_indiv=open("/scratch/yvsharish/working/aaaaa/baseline_2_exp_indi.txt","w")
+            f_1=open("../flownet2-tf/src/aaaaa/baseline_2_exp.txt","a+")
+            f_1_indiv=open("../flownet2-tf/src/aaaaa/baseline_2_exp_indi.txt","w")
             print(harish)
-            with open("/scratch/yvsharish/working/aaaaa/baseline_2_velocities_single_1_new.txt") as f:
+            with open("../flownet2-tf/src/aaaaa/baseline_2_velocities_single_1_new.txt") as f:
                 content = f.readlines()
             # print(content)
             content = [x.strip() for x in content]
@@ -621,7 +621,7 @@ class DemoRunner:
             os.system(command)
             # state.position=state.position+np.multiply(np.array([Vx,Vy,Vz]),np.array([-0.1,-0.09883337089, -0.09]))
             # state.position=state.position+np.multiply(np.array([Vx,Vy,Vz]),np.array([0.001,-0.001, -0.001]))
-            with open("/scratch/yvsharish/working/aaaaa/baseline_2_after_change.txt") as f:
+            with open("../flownet2-tf/src/aaaaa/baseline_2_after_change.txt") as f:
                 content = f.readlines()
             # print(content)
             content = [x.strip() for x in content]
@@ -668,7 +668,7 @@ class DemoRunner:
 
             ######################################## change here for the change in the destination and the desired output
             # foo = subprocess.Popen(["/bin/sh", "/home/harish/RRC/ICRA_2019/Flow_Net/flownet2/set-env.sh"])
-            # shell_source("/home/harish/RRC/ICRA_2019/Flow_Net/flownet2/set-env.sh")
+            # shell_source("/../flownet2-tfhome/harish/RRC/ICRA_2019/Flow_Net/flownet2/set-env.sh")
             #os.chdir("/home/yvsharish/test/flownet2-tf")
             #command="/home/yvsharish/test/test_tf/bin/python -m src.flownet2.test --input_a /scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba."+str(frames).zfill(5)+".png --input_b /home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png --out /home/yvsharish/test/output_dir"
 
@@ -691,7 +691,7 @@ class DemoRunner:
             command="python2 photo_error.py "+str(frames) + " 20"
             os.system(command)
             print('Before photo_error')
-            file_in=open("/scratch/yvsharish/working/aaaaa/baseline_2_photo.txt","r")
+            file_in=open("../flownet2-tf/src/aaaaa/baseline_2_photo.txt","r")
             for line in file_in.readlines():
               photo_error=(float(line))
             print(photo_error)

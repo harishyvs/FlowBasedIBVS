@@ -29,5 +29,18 @@ python -m src.flownet2.test --input_a data/samples/0img0.ppm --input_b data/samp
 ### Flowdepth (As a part of the module)
 
 ```
-python -m src.flownet2.test_new_2
+python -m src.flownet2.test_flow_depth
 ```
+
+### Depth Network(As a part of the module)
+
+```
+python -m src.flownet2.test_depth_net
+```
+
+### Changes we made
+
+##### For Flow depth
+
+
+##### For Depth Network
