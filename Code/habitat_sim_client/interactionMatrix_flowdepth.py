@@ -12,22 +12,11 @@ def interactionMatrix(s,cam,Z):
     Lsd=np.zeros((p*q*2,6))
 
     for m in range(0,p*q*2-2,2):
-        #print(s[m])
-        #print(u0)
         x=(int(s[m])-int(u0))/px
         y=(int(s[m+1])-int(v0))/py
         t=int(s[m])
         u=int(s[m+1])
-        # print(t,u)
-        #for true depth
-        #print(t)
-        #print(u)
         Zinv=(Z[u,t]+1)
-        #for flow_depth
-        # Zinv=Z[t,u]
-        # print(Zinv)
-
-        # Zinv=1/(30)
 
         Lsd[m,0]=-Zinv
         Lsd[m,1]=0

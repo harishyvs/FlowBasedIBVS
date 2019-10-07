@@ -39,9 +39,9 @@ python -m src.flownet2.test_depth_net (for depth network)
 [Client Code]
 ```
 cd Code/examples-baseline-2
-python example_me_depth_net.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb 
+python example_me_depth_net.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb --save_png --depth_sensor --max_frames 20 
 		(or)
-python example_me_flow_depth.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb
+python example_me_flow_depth.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb --save_png --depth_sensor --max_frames 20
 ```
 
 ### Results

@@ -126,14 +126,6 @@ class Net(object):
                 else:
                     input_a_path = 'image_baseline_2_output/test.rgba.' + str(data).zfill(5) + '.png'
                 input_b_path = 'image_baseline_2/desired_image.png'
-                # source = cv2.imread(input_a_path)
-                # target = cv2.imread(input_b_path)
-                #
-                # inp_source = np.expand_dims(np.clip(cv2.resize(source, (640, 480), interpolation = cv2.INTER_AREA), 0, 1), axis = 0)
-                # print(inp_source.shape)
-
-                # source = cv2.imread(input_a_path)
-                # target = cv2.imread(input_b_path)
 
                 source =cv2.imread(input_a_path,cv2.COLOR_BGR2RGB)
                 target =cv2.imread(input_b_path,cv2.COLOR_BGR2RGB)
@@ -168,14 +160,9 @@ class Net(object):
                 pred_depth = np.clip(DepthNorm(predicted_depth, maxDepth=1000), 10, 1000) / 1000
                 pred_depth = scale_up(2, pred_depth[:,:,:,0]) * 10.0
                 """
-                #print(pred_depth)
-                #print(np.shape(depth))
                 depth_img = np.zeros((480,640,1))
                 depth_img[:, :, 0] = pred_depth[0, :, :]
                 pred_flow_np = predicted_flow[0, :, :, :]
-                # depth_img[:, :, 1] = pred_depth[0, :, :]
-                # depth_img[:, :, 2] = pred_depth[0, :, :]
-                # print(depth_img)
                 depth_img=cv2.resize(pred_depth[0, :, :], (512, 384), interpolation = cv2.INTER_AREA)
                 unique_name = 'test.flo.' + str(data).zfill(5)
                 actual_name='output_img'
@@ -189,17 +176,9 @@ class Net(object):
                     full_out_path = os.path.join(out_path, actual_name + '.flo')
                     write_flow(pred_flow_np, full_out_path)
 
-                #path_depth='/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/'
-                #depth_img_loc = '/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth.' + str(data).zfill(5) + '.png'
-                #print(depth_img_loc)
                 shan='test.depth.'
                 full_out_path = os.path.join('image_baseline_2_output/',shan+str(data).zfill(5)+ '.png')
-                # depth_img = Image.fromarray(
-                #     (depth_img / 10 * 255).astype(np.uint8), mode="L"
-                # )
-                # depth_img.save("/scratch/yvsharish/working/habitat-sim/image_baseline_2_output_depth/test.depth.%05d.png" % total_frames)
                 imsave(full_out_path, depth_img)
-                #cv2.imwrite(full_out_path,depth_img)
                 print('image saved at desired location  ')
                 image = np.asarray(imread(full_out_path))
                 print(np.shape(image))

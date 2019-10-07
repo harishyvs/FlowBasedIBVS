@@ -84,60 +84,24 @@ class DemoRunner:
         agent_cfg = habitat_sim.agent.AgentConfiguration()
         agent_cfg.sensor_specifications = sensor_specs
         agent_cfg.action_space = {
-            # 14.1447326288
-            # "move_right": habitat_sim.agent.ActionSpec("moveRight", {"amount": 14.1447326288*Vx}),
-            # "move_left": habitat_sim.agent.ActionSpec("moveLeft", {"amount": 0}),
-            # "move_up": habitat_sim.agent.ActionSpec("moveUp", {"amount": 19.9351346819*Vy}),
-            # "move_down": habitat_sim.agent.ActionSpec("moveDown", {"amount": 0}),
-            # "move_forward": habitat_sim.agent.ActionSpec("moveForward", {"amount": 0}),
-            # "move_backward": habitat_sim.agent.ActionSpec("moveBackward", {"amount": 3.77832260507*Vz}),
 
-            # new_process
-            # "move_right": habitat_sim.agent.ActionSpec("moveRight", {"amount": -0.09883337089*Vx}),
             "move_right": habitat_sim.agent.ActionSpec("moveRight", {"amount": -0.1*Vx}),
-            # "move_right": habitat_sim.agent.ActionSpec("moveRight", {"amount": -0.08*Vx}),
 
             "move_left": habitat_sim.agent.ActionSpec("moveLeft", {"amount": 0}),
             "move_up": habitat_sim.agent.ActionSpec("moveUp", {"amount": -0.09883337089*Vy}),
-            # "move_up": habitat_sim.agent.ActionSpec("moveUp", {"amount": -0.1*Vy}),
 
             "move_down": habitat_sim.agent.ActionSpec("moveDown", {"amount": 0}),
             "move_forward": habitat_sim.agent.ActionSpec("moveForward", {"amount": 0}),
-            # "move_backward": habitat_sim.agent.ActionSpec("moveBackward", {"amount": -0.09883337089*Vz}),
-            # "move_backward": habitat_sim.agent.ActionSpec("moveBackward", {"amount": 0.01*Vz}),
-            # "move_backward": habitat_sim.agent.ActionSpec("moveBackward", {"amount": 0.09*Vz}),
             "move_backward": habitat_sim.agent.ActionSpec("moveBackward", {"amount": -0.09*Vz}),
-            # "look_left": habitat_sim.agent.ActionSpec("lookLeft", {"amount": 0*Wy}),
-            # "look_right": habitat_sim.agent.ActionSpec("lookRight", {"amount": 0}),
-            # "look_up": habitat_sim.agent.ActionSpec("lookUp", {"amount": 0*Wx}),
-            # "look_down": habitat_sim.agent.ActionSpec("lookDown", {"amount": 0}),
-            # "look_anti": habitat_sim.agent.ActionSpec("lookAnti", {"amount": 0*Wz}),
-            # "look_clock": habitat_sim.agent.ActionSpec("lookClock", {"amount": 0}),
-
-
-            # "look_left": habitat_sim.agent.ActionSpec("lookLeft", {"amount": 26.8092404858*Wy}),
-            # "look_right": habitat_sim.agent.ActionSpec("lookRight", {"amount": 0}),
-            # "look_up": habitat_sim.agent.ActionSpec("lookUp", {"amount": -23.0150891661*Wx}),
-            # "look_down": habitat_sim.agent.ActionSpec("lookDown", {"amount": 0}),
-            # # "look_anti": habitat_sim.agent.ActionSpec("lookAnti", {"amount": 491.810451008*Wz}),
-            # "look_anti": habitat_sim.agent.ActionSpec("lookAnti", {"amount": 24*Wz}),
-            # "look_clock": habitat_sim.agent.ActionSpec("lookClock", {"amount": 0}),
 
             "look_left": habitat_sim.agent.ActionSpec("lookLeft", {"amount": 1*Wy}),
             "look_right": habitat_sim.agent.ActionSpec("lookRight", {"amount": 0}),
             "look_up": habitat_sim.agent.ActionSpec("lookUp", {"amount": -1*Wx}),
             "look_down": habitat_sim.agent.ActionSpec("lookDown", {"amount": 0}),
-            # "look_anti": habitat_sim.agent.ActionSpec("lookAnti", {"amount": 491.810451008*Wz}),
-
-            # "look_anti": habitat_sim.agent.ActionSpec("lookAnti", {"amount": 2*Wz}),
             "look_anti": habitat_sim.agent.ActionSpec("lookAnti", {"amount": 1*Wz}),
-            # "look_anti": habitat_sim.agent.ActionSpec("lookAnti", {"amount": 0*Wz}),
             "look_clock": habitat_sim.agent.ActionSpec("lookClock", {"amount": 0}),
 
         }
-        # sim_cfg.agents = [agent_cfg]
-        #
-        # return sim_cfg
         return habitat_sim.Configuration(sim_cfg, [agent_cfg])
 
     def save_color_observation(self, obs, total_frames):
@@ -175,15 +139,10 @@ class DemoRunner:
     def init_agent_state(self, agent_id):
         # initialize the agent at a random start state
         new_state =habitat_sim.agent.AgentState()
-        #new_state.position = np.array([1.23351967 ,0.16511734 ,-0.00159764]).astype('float32')
         new_state.position=np.array([0,0,0]).astype('float32')
-        #new_state.position=np.array([0.56720018, 0.20017648, -0.37433529]).astype('float32')
-        # new_state.position = np.array([1.23351967 ,2,-0.00159764]).astype('float32')
 
         new_state.rotation = np.quaternion(1,0,0,0) #deenikosam import quaternion, import numpy as np
-        #new_state.rotation=np.quaternion(9.993908e-01, 0.000000e+00, 0.000000e+00, 3.489950e-02)
         agent = self._sim.initialize_agent(agent_id, new_state)
-        #agent.set_state(new_state)
         start_state=agent.get_state()
 
         # force starting position on first floor (try 100 samples)
@@ -218,8 +177,6 @@ class DemoRunner:
             ].action_space.keys()
         )
 
-        # while total_frames < self._sim_settings["max_frames"]:
-        # action = random.choice(action_names)
         action = "move_right"
         if not self._sim_settings["silent"]:
             print("action", action)
@@ -270,7 +227,6 @@ class DemoRunner:
         f=open("../flownet2-tf/src/aaaaa/baseline_2_exp_pose.txt","a+")
         f.write("%0.8f %0.8f %0.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation[0],state.rotation[1],state.rotation[2],state.rotation[3]))
         f.close()
-        # f.write("%0.8f %0.8f %0.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation[0],state.rotation[1],state.rotation[2],state.rotation[3]))
 
 
         if self._sim_settings["compute_shortest_path"]:
@@ -292,8 +248,6 @@ class DemoRunner:
             and self._sim_settings["print_semantic_mask_stats"]
         ):
             self.output_semantic_mask_stats(observations, total_frames)
-
-        # total_frames += 1
 
         end_time = time.time()
         perf = {}
@@ -324,7 +278,6 @@ class DemoRunner:
             input("Press Enter to continue...")
 
     def init_common(self,Vx,Vy,Vz,Wx,Wy,Wz,harish):
-        # Vx,Vy,Vz=[0.00360888861229238410, 0.01565492554614493145, -0.01483013368933373821]
         self._sim_cfg = self.make_cfg(self._sim_settings,Vx,Vy,Vz,Wx,Wy,Wz)
         self._sim = habitat_sim.Simulator(self._sim_cfg)
 
@@ -333,8 +286,6 @@ class DemoRunner:
 
         # initialize the agent at a random start state
         start_state = self.init_agent_state(self._sim_settings["default_agent"])
-    # print
-    # start_state = [-0.589161,0.76511734, -1.6109103]
         return start_state
 
     def benchmark(self, settings,Vx,Vy,Vz,Wx,Wy,Wz):
@@ -366,23 +317,16 @@ class DemoRunner:
         return flow.astype(np.float32)
 
     def ibvs_controller(self,vik,Z,cam,error):
-        #here centroid mean the image coordinates of intersted point in the form (number, 2)
-        #cam is the numpy interaction matrix
-        # here Z matrix should be taken from the ground truth images or should be proportional to the velocities of the points , Z - of the size #image
 
         w=0.15
         w=0.15*2
         w=0.5*0.15
         Lsd=interactionMatrix(vik,cam,Z)
-        # print(Lsd.shape)
-        # print(error.shape)
         lamda=0.01
 
         mu=0.03
         H=np.matmul(Lsd.T,Lsd)
         vc=-lamda*np.matmul(np.matmul(np.linalg.pinv(H+mu*H.diagonal()),Lsd.T),error)
-        #vc=-w*np.matmul(np.linalg.pinv(Lsd),error)
-        # error
         return vc
 
     def ibvs_controller_single(self,frames,vik):
@@ -402,56 +346,25 @@ class DemoRunner:
                 time.sleep(0.001)
 
         error= self.readFlow('../flownet2-tf/src/output_dir/output_img.flo' )
-        #error_i=error
         print('after reading flo')
         print(error.shape)
-        # print(error)
         nx, ny = (512,384)
         error=error.transpose(1,0,2)
         error=error.flatten()
         error=np.reshape(error,(nx*ny*2,-1))
-        # error=
-        # error=np.reshape(error,(512*384*2,1))
-        # nx, ny = (512,384)
         x = np.linspace(0, nx-1, nx)
         y = np.linspace(0, ny-1, ny)
-        # s=np.array([])
-        # for i in range(nx):
-        #     for j in range(ny):
-        #         s=np.hstack((s,np.array([i,j])))
-        # print(s)
-        # print(sys.argv[1])
-        # harish=("/home/harish/RRC/ICRA_2019/habitat/habitat-sim/image/test.depth.%05.png")
-        #if(frames==0):
-            #print("inside depth = 0")
-            #harish="/home/yvsharish/working/habitat-sim/image_baseline_2/test.depth." + str(frames).zfill(5) +".png"
-        #else:
-            #harish="/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
-        # harish="/home/harish/RRC/ICRA_2019/habitat-sim/image_baseline_2/test.depth.00000"+".png"
-        # harish="/home/harish/RRC/ICRA_2019/habitat-sim/image_baseline_2/test.depth.00019"+".png"
-        # print(harish)
-        #im=Image.open(harish)
-        #Z=(np.array(im))
-        #Z=Z.astype('float64')
-        #flow_depth=np.empty([nx,ny])
         if frames==0:
-            #/home/yvsharish/working/habitat-sim/image_baseline_2/test.depth." + str(frames).zfill(5) +".png
             img_flow=Image.open('../flownet2-tf/src/image_baseline_2/initial_depth.png')
             flow_depth=np.array(img_flow)
             flow_depth=flow_depth.astype('float64')
         else :
             error_i=self.readFlow('../flownet2-tf/src/output_dir/output_img_flow.flo')
-        #for i in range(nx):
-            #for j in range(ny):
-                # print(error_init[i,j,0])
-                #flow_depth[i,j]=np.sqrt(error_i[i,j,0]**2+error_i[i,j,1]**2)
-        #flow_depth=flow_depth.astype('float64')
 
             flow_depth=np.linalg.norm(error_i,axis=2)
             flow_depth=flow_depth.astype('float64')
 
         cam=np.asarray([[nx/2,0,nx/2],[0,ny/2, ny/2 ],[ 0, 0, 1]])
-        # print(error)
 
         print('before ibvs_controller')
         vc=self.ibvs_controller(vik,flow_depth,cam,error)
@@ -460,9 +373,6 @@ class DemoRunner:
         f1.close()
         f2.write("%.20f\n"%(LA.norm(vc[0:3,0])))
         f2.close()
-        # print(vc[2,0])
-        # f.write("%e %e %.20f %.20f %.20f %.20f\n" %(vc[0,0],-vc[1,0],-vc[2,0],vc[3,0],vc[4,0],vc[5,0]))
-        # file_in.write("%e %e %.20f %.20f %.20f %.20f\n" %(vc[0,0],-vc[1,0],-vc[2,0],vc[3,0],vc[4,0],vc[5,0]))
         f.write("%e %e %.20f %.20f %.20f %.20f\n" %(-vc[0,0],vc[1,0],-vc[2,0],-vc[3,0],vc[4,0],-vc[5,0]))
         file_in.write("%e %e %.20f %.20f %.20f %.20f\n" %(-vc[0,0],vc[1,0],-vc[2,0],-vc[3,0],vc[4,0],-vc[5,0]))
         file_in.close()
@@ -478,20 +388,10 @@ class DemoRunner:
         s_.connect((HOST, PORT))
 
         start_state = self.init_common(Vx,Vy,Vz,Wx,Wy,Wz,harish)
-        # self._sim_cfg = self.make_cfg(self._sim_settings,Vx,Vy,Vz,Wx,Wy,Wz)
-        # self._sim = habitat_sim.Simulator(self._sim_cfg)
         frames=0
         p=self._sim._default_agent
-        # p = self._sim.initialize_agent(0)
-        #os.chdir("/home/yvsharish/test/flownet2-tf")
-        #command="/home/yvsharish/test/test_tf/bin/python -m src.flownet2.init --input_a /scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba."+str(frames).zfill(5)+".png --input_b /home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png --out /home/yvsharish/test/output_dir"
-
-            #command= "/home/yvsharish/test/tf_flownet2/demo.py --input_a "+ " /home/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba."+str(frames).zfill(5)+".png"+" --input_b /home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png --out ./"
-        #os.system(command)
-
 
         photo_error=2500
-        # f=open("/home/harish/RRC/ICRA_2019/baseline_2/aaaaa/baseline_2_exp.txt","a+")
         nx, ny = (512,384)
         vik=np.array([])
         for i in range(nx):
@@ -502,21 +402,12 @@ class DemoRunner:
 
             s_.send(str.encode(str(frames)))
             data = s_.recv(4096)
-            #s_.close()
             print('Received', repr(data))
             print('Received data',data)
             print('Before IBVS')
-            #while(not os.path.isfile('../flownet2-tf/src/output_dir/output_img.flo') ):
-                #time.sleep(0.001)
-            #while(not os.path.isfile('../flownet2-tf/src/output_dir/output_img_flow.flo') ):
-                #time.sleep(0.001)
-
 
             self.ibvs_controller_single(frames,vik)
 
-            # os.chdir("/home/yvsharish/working/baseline_2/")
-            # command="python ibvs_controller_single.py "+str(frames)
-            # os.system(command)
             print('After IBVS')
 
             f_1=open("../flownet2-tf/src/aaaaa/baseline_2_exp.txt","a+")
@@ -539,22 +430,9 @@ class DemoRunner:
             Wy=float(mat[harish][4])
             Wz=float(mat[harish][5])
 
-
-
-            # print("new velocities are:")
-            # print(Vx,Vy,Vz)
-            # q=quaternion_from_euler(Wx,Wy,Wz)
-
-
             print('I am here')
             if(frames==0):
-                #new_state =habitat_sim.agent.AgentState()
-                #new_state.position = np.array([1.23351967 ,0.16511734 ,-0.00159764]).astype('float32')
-                # new_state.position = np.array([1.23351967 ,2,-0.00159764]).astype('float32')
 
-                #new_state.rotation = np.quaternion(1,0,0,0) #deenikosam import quaternion, import numpy as np
-                #p = self._sim.initialize_agent(0,new_state)
-                #p.set_state(new_state)
                 observations=self._sim.get_sensor_observations()
                 if self._sim_settings["save_png"]:
                     if self._sim_settings["color_sensor"]:
@@ -563,36 +441,20 @@ class DemoRunner:
                         self.save_depth_observation(observations, frames)
                     if self._sim_settings["semantic_sensor"]:
                         self.save_semantic_observation(observations, frames)
-            # print(q1,q2,q3,q4)
-            #state = self._sim.last_state()
             state=p.get_state()
             if not self._sim_settings["silent"]:
                 print("-----------position\t", state.position, "\t", "rotation\t", state.rotation,"imgi",state.rotation.imag, "real",state.rotation.real,"sensorstate",state)
             frames = frames +1
-            #state=p.get_state()
-            # f_1_indiv.write("%0.8f %0.8f %.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation[0],state.rotation[1],state.rotation[2],state.rotation[3]))
             f_1_indiv.write("%0.8f %0.8f %.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation.imag[0],state.rotation.imag[1],state.rotation.imag[2],state.rotation.real))
             f_1_indiv.close()
-            #f_1=open("/home/yvsharish/working/aaaaa/baseline_2_exp.txt","a+")
 
             f_1.write("%0.8f %0.8f %.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation.imag[0],state.rotation.imag[1],state.rotation.imag[2],state.rotation.real))
 
-
-
-
-            # command= "python2 eur_quat.py "+str(state.rotation[0])+" "+str(state.rotation[1])+" "+str(state.rotation[2])+" "+str(state.rotation[3])
-            #
-            #
-            #
-            # os.system(command)
             os.chdir("../flownet2-tf/src/baseline_2/")
             command="python2 homogeneous.py"
             os.system(command)
-            # state.position=state.position+np.multiply(np.array([Vx,Vy,Vz]),np.array([-0.1,-0.09883337089, -0.09]))
-            # state.position=state.position+np.multiply(np.array([Vx,Vy,Vz]),np.array([0.001,-0.001, -0.001]))
             with open("../flownet2-tf/src/aaaaa/baseline_2_after_change.txt") as f:
                 content = f.readlines()
-            # print(content)
             content = [x.strip() for x in content]
             mat_ = []
             for line in content:
@@ -605,18 +467,9 @@ class DemoRunner:
             state.rotation=np.quaternion(float(mat_[harish][6]),float(mat_[harish][3]),float(mat_[harish][4]),float(mat_[harish][5]))
             print("position\t", state.position, "\t", "rotation\t", state.rotation)
 
-            # state.rotation[0]=float(mat_[harish][0])
-            # state.rotation[1]=float(mat_[harish][1])
-            # state.rotation[2]=float(mat_[harish][2])
-            # state.rotation[3]=float(mat_[harish][3])
-
-            # state.position=state.position+np.array([0.05,0.05,0.05])
-            # f_1.write("%0.8f %0.8f %.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation[1],state.rotation[2],state.rotation[3],state.rotation[0]))
             f_1.write("%0.8f %0.8f %.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation.imag[0],state.rotation.imag[1],state.rotation.imag[2],state.rotation.real))
             f_1.close()
 
-            #p= self._sim.initialize_agent(0, state)
-            #state.sensor_states={'color_sensor': habitat_sim.agent.SixDOFPose(position=state.position, rotation=np.quaternion(float(mat_[harish][3]),float(mat_[harish][4]),float(mat_[harish][5]),float(mat_[harish][6]))), 'depth_sensor': habitat_sim.agent.SixDOFPose(position=state.position, rotation=np.quaternion(float(mat_[harish][3]),float(mat_[harish][4]),float(mat_[harish][5]),float(mat_[harish][6])))}
             state.sensor_states={'color_sensor': habitat_sim.agent.SixDOFPose(position=np.array([state.position[0],state.position[1]+1.5,state.position[2]]), rotation= state.rotation), 'depth_sensor': habitat_sim.agent.SixDOFPose(position=np.array([state.position[0],state.position[1]+1.5,state.position[2]]), rotation=state.rotation)}
             p.set_state(state)
             self._sim._last_state=p.get_state()
@@ -630,30 +483,6 @@ class DemoRunner:
                 if self._sim_settings["semantic_sensor"]:
                     self.save_semantic_observation(observations, frames)
             print("after observation - p.last_state",self._sim._last_state)
-
-            #p.set_state(state)
-            #self._sim._last_state=p.state
-            # frames=frames+1
-
-            ######################################## change here for the change in the destination and the desired output
-            # foo = subprocess.Popen(["/bin/sh", "/home/harish/RRC/ICRA_2019/Flow_Net/flownet2/set-env.sh"])
-            # shell_source("/home/harish/RRC/ICRA_2019/Flow_Net/flownet2/set-env.sh")
-            #os.chdir("/home/yvsharish/test/flownet2-tf")
-            #command="/home/yvsharish/test/test_tf/bin/python -m src.flownet2.test --input_a /scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba."+str(frames).zfill(5)+".png --input_b /home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png --out /home/yvsharish/test/output_dir"
-
-            #command= "/home/yvsharish/test/tf_flownet2/demo.py --input_a "+ " /home/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba."+str(frames).zfill(5)+".png"+" --input_b /home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png --out ./"
-            #os.system(command)
-            #s.send("/scratch/yvsharish/working/habitat-sim/image_baseline_2_output/test.rgba."+str(frames).zfill(5)+".png /home/yvsharish/working/habitat-sim/image_baseline_2/test.rgba.00019.png /home/yvsharish/test/output_dir")
-            #s_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            #s_.connect((HOST, PORT))
-
-            #s_.send(str.encode(str(frames)))
-            #data = s_.recv(4096)
-            #s_.close()
-            #print('Received', repr(data))
-            #os.chdir("/home/yvsharish/working/baseline_2/")
-            #command="python2 ibvs_controller_single.py "+str(frames)
-            #os.system(command)
 
             os.chdir("../flownet2-tf/src/baseline_2/")
             ##################### change here when you change for iterations
@@ -669,29 +498,6 @@ class DemoRunner:
             if(frames>=2):
                 os.remove('../flownet2-tf/src/output_dir/output_img_flow.flo')
 
-                        # total_frames=total_frames+1
-            # h=h+1
-
-
-
-
-
-
-
-            # photo_error=50
-        # print(Vx)
-        # Vx,Vy,Vz,Wz=[0.00360888861229238410, 0.01565492554614493145, -0.01483013368933373821]
-        # if(harish==0):
-        # harish=settings["total_frames"]
-
-        # else:
-        # vard= demo_runner.example(Vx,Vy,Vz,Wz,harish,vard)
-        # harish=harish+1
-
-        # perf = self.do_time_steps(harish)
-        # f_1.close()
         s_.close()
         self._sim.close()
         del self._sim
-        # f.close()
-        # return perf

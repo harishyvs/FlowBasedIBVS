@@ -43,62 +43,7 @@ class Net(object):
 
         with tf.Session() as sess:
             saver.restore(sess, checkpoint)
-    #######################
-    # def test(self, checkpoint, input_a_path, input_b_path, out_path, save_image=True, save_flo=False):
-    #     input_a = imread(input_a_path)
-    #     input_b = imread(input_b_path)
-    #
-    #     # Convert from RGB -> BGR
-    #     input_a = input_a[..., [2, 1, 0]]
-    #     input_b = input_b[..., [2, 1, 0]]
-    #
-    #     # Scale from [0, 255] -> [0.0, 1.0] if needed
-    #     if input_a.max() > 1.0:
-    #         input_a = input_a / 255.0
-    #     if input_b.max() > 1.0:
-    #         input_b = input_b / 255.0
-    #
-    #     # TODO: This is a hack, we should get rid of this
-    #     training_schedule = LONG_SCHEDULE
-    #
-    #     inputs = {
-    #         'input_a': tf.expand_dims(tf.constant(input_a, dtype=tf.float32), 0),
-    #         'input_b': tf.expand_dims(tf.constant(input_b, dtype=tf.float32), 0),
-    #     }
-    #     predictions = self.model(inputs, training_schedule)
-    #     pred_flow = predictions['flow']
-    #
-    #     saver = tf.train.Saver()
-    #
-    #     with tf.Session() as sess:
-    #         saver.restore(sess, checkpoint)
-    #         pred_flow = sess.run(pred_flow)[0, :, :, :]
-    #
-    #         unique_name = 'output_img'
-    #         if save_image:
-    #             flow_img = flow_to_image(pred_flow)
-    #             full_out_path = os.path.join(out_path, unique_name + '.png')
-    #             imsave(full_out_path, flow_img)
-    #
-    #         if save_flo:
-    #             full_out_path = os.path.join(out_path, unique_name + '.flo')
-    #             write_flow(pred_flow, full_out_path)
-    ###################################
     def test(self, checkpoint, out_path, save_image=True, save_flo=True):
-        #input_a = imread(input_a_path)
-        #input_b = imread(input_b_path)
-
-        # Convert from RGB -> BGR
-        #input_a = input_a[..., [2, 1, 0]]
-        #input_b = input_b[..., [2, 1, 0]]
-
-        # Scale from [0, 255] -> [0.0, 1.0] if needed
-        #if input_a.max() > 1.0:
-        #    input_a = input_a / 255.0
-        #if input_b.max() > 1.0:
-        #    input_b = input_b / 255.0
-
-        # TODO: This is a hack, we should get rid of this
         training_schedule = LONG_SCHEDULE
         input_a = tf.placeholder(shape = [384, 512, 3], dtype = tf.float32, name = "source_image")
         input_b = tf.placeholder(shape = [384, 512, 3], dtype = tf.float32, name = "target_image")
@@ -117,10 +62,6 @@ class Net(object):
             saver.restore(sess, checkpoint)
             HOST = '127.0.0.1'
             PORT = 50055
-            #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            #s.bind((HOST, PORT))
-            #s.listen(1)
-            #conn, addr = s.accept()
 
             f=open("aaaaa/baseline_2_avg_flow.txt","a+")
             while True:
@@ -166,18 +107,9 @@ class Net(object):
                         source_path = 'image_baseline_2_output/test.rgba.' + str(data).zfill(5) + '.png'
                         target_path = 'image_baseline_2/desired_image.png'
                         target_path_2 = 'image_baseline_2_output/test.rgba.' + str(int(data) - 1).zfill(5) + '.png'
-                        # source = []
-                        # target = []
                         source_img = imread(source_path)
                         target_img = imread(target_path)
                         target2_img = imread(target_path_2)
-                        # source.append(source_img)
-                        # source.append(source_img)
-                        # target.append(target_img)
-                        # target.append(target2_img)
-                        # source = np.asarray(source_img)
-                        # target_for = np.asarray(target_img)
-                        # target_rev=np.asarray(target_)
                         source = source_img[..., [2, 1, 0]]
                         target_for = target_img[..., [2, 1, 0]]
                         target_rev=target2_img[..., [2, 1, 0]]
@@ -191,8 +123,6 @@ class Net(object):
                         pred_flow_for = sess.run(pred_flow, feed_dict = {input_a : source,  input_b : target_for})[0,:,:,:]
                         pred_flow_rev = sess.run(pred_flow, feed_dict = {input_a : source,  input_b : target_rev})[0,:,:,:]
 
-                        # pred_flow_for = pred_flow_np[0, :, :, :]
-                        # pred_flow_rev = pred_flow_np[1, :, :, :]
                         save_flo = True
                         unique_name_for = 'test.flo.' + str(data).zfill(5)
                         unique_name_rev = 'test.flo_depth.' + str(int(data) - 1).zfill(5)
