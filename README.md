@@ -6,7 +6,7 @@ This repository contains the code for running FlowBased IBVS and the results obt
 
 1. Code : This folder contains the main code for running FlowBased IBVS.
 
-	##### examples_baseline_2 folder
+	##### habitat_sim_client folder
 		This folder contains the code that runs the habitat simulator and ibvs controller.
 
 	##### flownet2-tf
@@ -38,7 +38,7 @@ python -m src.flownet2.test_depth_net (for depth network)
 
 [Client Code]
 ```
-cd Code/examples-baseline-2
+cd Code/habitat_sim_client
 python example_me_depth_net.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb --save_png --depth_sensor --max_frames 20 
 		(or)
 python example_me_flow_depth.py --width 512 --height 384 --scene path/to/habitat/scene/name.glb --save_png --depth_sensor --max_frames 20
