@@ -40,6 +40,7 @@ python -m src.flownet2.test_depth_net
 
 ### Changes we made
 
+In flowlib.py : Added a return parameter avg_flow to the flow_to_image function
 ##### For Flow depth
 
 

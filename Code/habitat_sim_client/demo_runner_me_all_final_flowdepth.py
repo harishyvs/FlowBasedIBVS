@@ -339,7 +339,7 @@ class DemoRunner:
         f1=open("../flownet2-tf/src/aaaaa/baseline_2_velocities_norm_1.txt","a+")
         f2=open("../flownet2-tf/src/aaaaa/baseline_2.txt","w")
         print('before getting flo')
-        while(not os.path.isfile('output_dir/output_img.flo') ):
+        while(not os.path.isfile('../flownet2-tf/src/output_dir/output_img.flo') ):
             time.sleep(0.001)
         if frames!=0:
             while(not os.path.isfile('../flownet2-tf/src/output_dir/output_img_flow.flo') ):
@@ -453,6 +453,7 @@ class DemoRunner:
             os.chdir("../flownet2-tf/src/baseline_2/")
             command="python2 homogeneous.py"
             os.system(command)
+            os.chdir("../../../habitat_sim_client")
             with open("../flownet2-tf/src/aaaaa/baseline_2_after_change.txt") as f:
                 content = f.readlines()
             content = [x.strip() for x in content]
@@ -488,6 +489,8 @@ class DemoRunner:
             ##################### change here when you change for iterations
             command="python2 photo_error.py "+str(frames) + " 20"
             os.system(command)
+            os.chdir("../../../habitat_sim_client")
+            
             print('Before photo_error')
             file_in=open("../flownet2-tf/src/aaaaa/baseline_2_photo.txt","r")
             for line in file_in.readlines():

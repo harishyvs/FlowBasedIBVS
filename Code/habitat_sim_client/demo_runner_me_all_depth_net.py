@@ -144,7 +144,7 @@ class DemoRunner:
     def init_agent_state(self, agent_id):
         # initialize the agent at a random start state
         new_state =habitat_sim.agent.AgentState()
-        new_state.position=np.array([0,0,0]).astype('float32')
+        new_state.position=np.array([1,0,0]).astype('float32')
 
         new_state.rotation = np.quaternion(1,0,0,0) #deenikosam import quaternion, import numpy as np
         agent = self._sim.initialize_agent(agent_id, new_state)
@@ -363,7 +363,7 @@ class DemoRunner:
         error=np.reshape(error,(nx*ny*2,-1))
         x = np.linspace(0, nx-1, nx)
         y = np.linspace(0, ny-1, ny)
-        alph='../flownet2-tf/src/aaaaa/image_baseline_2_output/test.depth.' + str(frames).zfill(5) + '.png'
+        alph='../flownet2-tf/src/image_baseline_2_output/test.depth.' + str(frames).zfill(5) + '.png'
         print(alph)
         while(not os.path.isfile(alph)):
             time.sleep(0.001)
@@ -379,7 +379,7 @@ class DemoRunner:
                     time.sleep(0.001)
 
 
-            harish="../flownet2-tf/src/aaaaa/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
+            harish="../flownet2-tf/src/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
 
         else:
             while(True):
@@ -389,7 +389,7 @@ class DemoRunner:
                 except:
                     time.sleep(0.001)
 
-            harish="../flownet2-tf/src/aaaaa/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
+            harish="../flownet2-tf/src/image_baseline_2_output/test.depth." + str(frames).zfill(5) +".png"
             print(alph)
         im=cv2.imread(alph,cv2.IMREAD_GRAYSCALE)
         Z=(np.array(im))
@@ -488,9 +488,11 @@ class DemoRunner:
 
             f_1.write("%0.8f %0.8f %.8f %e %e %e %e\n" %(state.position[0],state.position[1],state.position[2],state.rotation.imag[0],state.rotation.imag[1],state.rotation.imag[2],state.rotation.real))
 
-            os.chdir("../flownet2-tf/src/working/baseline_2/")
+            os.chdir("../flownet2-tf/src/baseline_2/")
             command="python2 homogeneous.py"
             os.system(command)
+            os.chdir("../../../habitat_sim_client")
+
             with open("../flownet2-tf/src/aaaaa/baseline_2_after_change.txt") as f:
                 content = f.readlines()
             # print(content)
@@ -524,10 +526,11 @@ class DemoRunner:
             print("after observation - p.last_state",self._sim._last_state)
 
 
-            os.chdir("../flownet2-tf/src/working/baseline_2/")
+            os.chdir("../flownet2-tf/src/baseline_2/")
             ##################### change here when you change for iterations
             command="python2 photo_error.py "+str(frames) + " 20"
             os.system(command)
+            os.chdir("../../../habitat_sim_client")
             print('Before photo_error')
             file_in=open("../flownet2-tf/src/aaaaa/baseline_2_photo.txt","r")
             for line in file_in.readlines():

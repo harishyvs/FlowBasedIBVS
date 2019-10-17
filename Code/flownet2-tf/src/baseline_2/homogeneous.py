@@ -68,6 +68,6 @@ timeHOMO=time2-time1+time22-time11
 ftime=open("../aaaaa/baseline_2_time_iterations.txt","a+")
 ftime.write("HOMO%.20f\n"%(timeHOMO))
 ftime.close()
-f_1=open("../aaaaa/baseline_2_after_change.txt","w")
+f_1=open("../aaaaa/baseline_2_after_change.txt","w+")
 f_1.write("%0.8f %0.8f %.8f %e %e %e %e\n" %(ti1[0],ti1[1],ti1[2],qi1[0],qi1[1],qi1[2],qi1[3]))
 f_1.close()
