@@ -17,7 +17,7 @@ class FlowNet2(Net):
 
     def model(self, inputs, training_schedule, trainable=True):
         _, height, width, _ = inputs['input_a'].shape.as_list()
-        with tf.variable_scope('FlowNet'):
+        with tf.variable_scope('FlowNet2'):
             # Forward pass through FlowNetCSS and FlowNetSD with weights frozen
             net_css_predictions = self.net_css.model(inputs, training_schedule, trainable=False)
             net_sd_predictions = self.net_sd.model(inputs, training_schedule, trainable=False)

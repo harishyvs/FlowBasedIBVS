@@ -398,7 +398,7 @@ class DemoRunner:
             for j in range(ny):
                 vik=np.hstack((vik,np.array([i,j])))
         print(vik)
-        while photo_error>1000:
+        while photo_error>500:
 
             s_.send(str.encode(str(frames)))
             data = s_.recv(4096)

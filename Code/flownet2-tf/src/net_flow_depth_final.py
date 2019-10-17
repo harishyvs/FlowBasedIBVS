@@ -59,6 +59,7 @@ class Net(object):
         with tf.Session() as sess:
             init_op = tf.global_variables_initializer()
             sess.run(init_op)
+            var_name_list = [v.name for v in tf.trainable_variables()]
             saver.restore(sess, checkpoint)
             HOST = '127.0.0.1'
             PORT = 50055

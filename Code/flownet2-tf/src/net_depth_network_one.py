@@ -90,6 +90,7 @@ class Net(object):
         sess_flow.run(init_op_f)
 
         #load the flow model
+        var_name_list = [v.name for v in tf.trainable_variables()]
 
         saver.restore(sess_flow, checkpoint)
 
